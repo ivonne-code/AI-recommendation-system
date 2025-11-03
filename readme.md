@@ -2,7 +2,7 @@
 
 An intelligent recommendation system prototype based on editable product descriptions, designed to study how user-customized content affects AI recommendation outcomes.
 
-English | [中文](./README_CN.md)
+English | [中文](./readme_cn.md)
 
 ## Overview
 
