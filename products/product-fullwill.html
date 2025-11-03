@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fullwill Vision Pro 6QT Air Fryer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #0F1111;
+        }
+
+        .header {
+            background-color: #131921;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        .header-content {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .search-bar {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .breadcrumb {
+            padding: 15px 20px;
+            font-size: 12px;
+            color: #565959;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb a {
+            color: #007185;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: #C7511F;
+            text-decoration: underline;
+        }
+
+        .product-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        .image-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background: #f7f7f7;
+            margin-bottom: 15px;
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .thumbnail:hover {
+            border-color: #C7511F;
+        }
+
+        .info-section {
+            padding: 0 20px;
+        }
+
+        .product-title {
+            font-size: 24px;
+            line-height: 32px;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .stars {
+            color: #FFA41C;
+        }
+
+        .rating-count {
+            color: #007185;
+        }
+
+        .price-section {
+            margin: 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid #e7e7e7;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .price {
+            font-size: 28px;
+            color: #B12704;
+            font-weight: 400;
+        }
+
+        .product-details {
+            margin: 20px 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .feature-list li:before {
+            content: "• ";
+            color: #007185;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .buy-box {
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f7f7f7;
+        }
+
+        .buy-price {
+            font-size: 28px;
+            color: #B12704;
+            margin-bottom: 10px;
+        }
+
+        .delivery-info {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .stock-info {
+            color: #007600;
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        .quantity-selector {
+            margin: 15px 0;
+        }
+
+        .quantity-selector select {
+            padding: 8px;
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background: #FFD814;
+            border: 1px solid #FCD200;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #F7CA00;
+        }
+
+        .buy-now-btn {
+            width: 100%;
+            padding: 12px;
+            background: #FFA41C;
+            border: 1px solid #FF8F00;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .buy-now-btn:hover {
+            background: #FA8900;
+        }
+
+        .description-section {
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .description-text {
+            line-height: 1.8;
+            color: #0F1111;
+        }
+
+        /* Edit functionality styles */
+        .editable-section {
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .editable-section:hover {
+            background-color: #f0f0f0;
+        }
+
+        .edit-indicator {
+            display: none;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #FFD814;
+            color: #0F1111;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .editable-section:hover .edit-indicator {
+            display: block;
+        }
+
+        .edit-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+        }
+
+        .edit-overlay.active {
+            display: block;
+        }
+
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .edit-modal.active {
+            display: block;
+        }
+
+        .edit-modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .edit-modal-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #FFD814;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+        }
+
+        .edit-modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .edit-modal-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .edit-modal-save {
+            background-color: #FFD814;
+            color: #0F1111;
+        }
+
+        .edit-modal-save:hover {
+            background-color: #F7CA00;
+        }
+
+        .edit-modal-cancel {
+            background-color: white;
+            color: #0F1111;
+            border: 1px solid #D5D9D9;
+        }
+
+        .edit-modal-cancel:hover {
+            background-color: #F7FAFA;
+        }
+    </style>
+</head>
+<!-- Edit Modal -->
+<div class="edit-overlay" id="editOverlay"></div>
+<div class="edit-modal" id="editModal">
+    <div class="edit-modal-header">Edit Description</div>
+    <textarea class="edit-modal-textarea" id="editTextarea"></textarea>
+    <div class="edit-modal-buttons">
+        <button class="edit-modal-btn edit-modal-cancel" onclick="cancelEdit()">Cancel</button>
+        <button class="edit-modal-btn edit-modal-save" onclick="saveEdit()">Save</button>
+    </div>
+</div>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">Amazon</div>
+            <input type="text" class="search-bar" placeholder="Search Amazon">
+        </div>
+    </div>
+
+    <div class="breadcrumb">
+        <a href="#">Home</a> › 
+        <a href="#">Kitchen & Dining</a> › 
+        <a href="#">Small Appliances</a> › 
+        <a href="#">Air Fryers</a> › 
+        <span>Fullwill Vision Pro 6QT Air Fryer</span>
+    </div>
+
+    <div class="product-container">
+        <div class="image-section">
+            <img src="https://m.media-amazon.com/images/I/81Y0xshGU5L._AC_SX679_.jpg" alt="Fullwill Vision Pro Air Fryer" class="main-image" id="mainImage">
+            <div class="thumbnail-container">
+                <img src="https://m.media-amazon.com/images/I/81Y0xshGU5L._AC_SX522_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+                <img src="https://m.media-amazon.com/images/I/81Y0xshGU5L._AC_SX569_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+                <img src="https://m.media-amazon.com/images/I/81Y0xshGU5L._AC_SY450_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+                <img src="https://m.media-amazon.com/images/I/81Y0xshGU5L._AC_SY355_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h1 class="product-title">Fullwill Vision Pro 6QT Air Fryer with Viewing Window, Base and Upper Heating, 12 Presets for Chicken Wings, Steak, Fries, Pizza and More, Non-Stick and PFOA-Free, Fast and Oil Free Cooking for Healthy Meals</h1>
+            
+            <div class="rating-section">
+                <span class="stars">★★★★☆</span>
+                <span class="rating-count">4.4 out of 5 stars</span>
+                <a href="#" class="rating-count">54 ratings</a>
+            </div>
+
+            <div class="price-section">
+                <span class="price">$49.99</span>
+            </div>
+
+            <div class="product-details">
+                <h2 class="section-title">About this item</h2>
+                <ul class="feature-list editable-section" id="featureList">
+                    <span class="edit-indicator">✏️ Click to Edit</span>
+                    <li><strong>No More Flipping:</strong> The Fullwill Vision Pro Air Fryer features innovative Base and Upper heating, ensuring even cooking and crispy results every time.</li>
+                    
+                    <li><strong>Versatile Cooking Presets:</strong> With 12 ingredient-specific presets, including chicken wings, steak, fries, and more, preparing your favorite meals has never been easier.</li>
+                    
+                    <li><strong>Convenient Viewing Window:</strong> Monitor your cooking progress effortlessly through the built-in viewing window, allowing you to achieve perfect results without opening the fryer.</li>
+                    
+                    <li><strong>Healthy Cooking Made Easy:</strong> Enjoy your favorite fried foods with up to 85% less oil, making it a healthier choice for you and your family.</li>
+                    
+                    <li><strong>Spacious 6 QT Capacity:</strong> The 6-quart capacity is perfect for family meals, allowing you to cook larger portions while saving time and effort.</li>
+                    
+                    <li><strong>Easy to Clean:</strong> The non-stick basket and crisper plate make cleanup a breeze, so you can spend more time enjoying your meals.</li>
+                    
+                    <li><strong>User-Friendly Design:</strong> The Fullwill Vision Pro Air Fryer combines advanced technology with a sleek design, making it a stylish and functional addition to any kitchen.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="buy-box">
+            <div class="buy-price">$49.99</div>
+            
+            <div class="delivery-info">
+                <strong>FREE Returns</strong><br>
+                FREE delivery <strong>Sunday, October 26</strong><br>
+                Or fastest delivery <strong>Friday, October 24</strong>
+            </div>
+
+            <div class="stock-info">In Stock</div>
+
+            <div class="quantity-selector">
+                <label for="quantity">Quantity:</label>
+                <select id="quantity">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+
+            <button class="add-to-cart-btn">Add to Cart</button>
+            <button class="buy-now-btn">Buy Now</button>
+
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px;">
+                <div style="margin: 5px 0;"><strong>Ships from:</strong> Amazon.com</div>
+                <div style="margin: 5px 0;"><strong>Sold by:</strong> Amazon.com</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="description-section">
+        <h2 class="section-title">Product Description</h2>
+        <div class="description-text editable-section" id="productDescription">
+            <span class="edit-indicator">✏️ Click to Edit</span>
+            <p style="margin-bottom: 15px;">
+                <strong>No More Flipping:</strong> The Fullwill Vision Pro Air Fryer features innovative Base and Upper heating technology, ensuring even cooking and crispy results every time. This dual heating system eliminates the need to flip your food halfway through cooking, saving you time and effort while delivering perfectly cooked meals.
+            </p>
+            <p style="margin-bottom: 15px;">
+                <strong>Versatile Cooking Presets:</strong> With 12 ingredient-specific presets, including chicken wings, steak, fries, pizza, and more, preparing your favorite meals has never been easier. Simply select the preset for your dish, and the air fryer automatically adjusts the temperature and cooking time for optimal results.
+            </p>
+            <p style="margin-bottom: 15px;">
+                <strong>Convenient Viewing Window:</strong> Monitor your cooking progress effortlessly through the built-in viewing window. This unique feature allows you to achieve perfect results without opening the fryer, maintaining the internal temperature and ensuring consistent cooking throughout.
+            </p>
+            <p style="margin-bottom: 15px;">
+                <strong>Healthy Cooking Made Easy:</strong> Enjoy your favorite fried foods with up to 85% less oil, making it a healthier choice for you and your family. The Fullwill Vision Pro Air Fryer uses rapid air circulation technology to create crispy, delicious meals without the excess fat and calories.
+            </p>
+            <p>
+                <strong>Spacious 6 QT Capacity:</strong> The 6-quart capacity is perfect for family meals, allowing you to cook larger portions while saving time and effort. The non-stick basket and crisper plate are PFOA-free and make cleanup a breeze. The Fullwill Vision Pro Air Fryer combines advanced technology with a sleek design, making it a stylish and functional addition to any kitchen.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentEditingElement = null;
+        let originalContent = '';
+
+        function changeImage(src) {
+            document.getElementById('mainImage').src = src.replace(/_(AC_S[XY]\d+)\.jpg/, '_AC_SX679.jpg');
+        }
+
+        // Initialize editable sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const editableSections = document.querySelectorAll('.editable-section');
+            
+            editableSections.forEach(section => {
+                section.addEventListener('click', function(e) {
+                    // Don't trigger if clicking on a link
+                    if (e.target.tagName === 'A') return;
+                    
+                    openEditModal(this);
+                });
+            });
+
+            // Close modal on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('editModal').classList.contains('active')) {
+                    cancelEdit();
+                }
+            });
+
+            // Load saved content
+            loadFromLocalStorage();
+        });
+
+        function openEditModal(element) {
+            currentEditingElement = element;
+            
+            // Get current content (remove edit indicator)
+            const editIndicator = element.querySelector('.edit-indicator');
+            let content = element.innerHTML;
+            if (editIndicator) {
+                content = content.replace(editIndicator.outerHTML, '');
+            }
+            
+            originalContent = content;
+            
+            // Convert HTML to text for editing
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            const textContent = tempDiv.innerText || tempDiv.textContent;
+            
+            // Set textarea value
+            document.getElementById('editTextarea').value = textContent.trim();
+            
+            // Show modal and overlay
+            document.getElementById('editOverlay').classList.add('active');
+            document.getElementById('editModal').classList.add('active');
+            
+            // Focus textarea
+            setTimeout(() => {
+                document.getElementById('editTextarea').focus();
+            }, 100);
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function saveEdit() {
+            const newText = document.getElementById('editTextarea').value.trim();
+            
+            if (currentEditingElement) {
+                // Get edit indicator
+                const editIndicator = currentEditingElement.querySelector('.edit-indicator');
+                
+                // Clear current content
+                currentEditingElement.innerHTML = '';
+                
+                // Re-add edit indicator first
+                if (editIndicator) {
+                    currentEditingElement.appendChild(editIndicator.cloneNode(true));
+                }
+                
+                // Convert lines to HTML based on element
+                if (currentEditingElement.id === 'featureList') {
+                    // For feature list, create UL with LI items
+                    const ul = document.createElement('ul');
+                    ul.className = 'feature-list';
+                    
+                    const lines = newText.split('\n').filter(line => line.trim());
+                    lines.forEach(line => {
+                        const li = document.createElement('li');
+                        li.innerHTML = line.trim();
+                        ul.appendChild(li);
+                    });
+                    
+                    currentEditingElement.appendChild(ul);
+                } else {
+                    // For description, create paragraphs
+                    const paragraphs = newText.split('\n\n').filter(p => p.trim());
+                    paragraphs.forEach(para => {
+                        const p = document.createElement('p');
+                        p.style.marginBottom = '15px';
+                        p.innerHTML = para.trim().replace(/\n/g, '<br>');
+                        currentEditingElement.appendChild(p);
+                    });
+                }
+                
+                // Show saved notification
+                const originalBg = currentEditingElement.style.backgroundColor;
+                currentEditingElement.style.backgroundColor = '#d4edda';
+                setTimeout(() => {
+                    currentEditingElement.style.backgroundColor = originalBg;
+                }, 800);
+                
+                // Save to localStorage
+                saveToLocalStorage();
+            }
+            
+            closeEditModal();
+        }
+
+        function cancelEdit() {
+            closeEditModal();
+        }
+
+        function closeEditModal() {
+            document.getElementById('editOverlay').classList.remove('active');
+            document.getElementById('editModal').classList.remove('active');
+            document.body.style.overflow = '';
+            currentEditingElement = null;
+            originalContent = '';
+        }
+
+        // Get product ID from current page URL
+        function getCurrentProductId() {
+            const url = window.location.pathname;
+            return url.split('/').pop().replace('.html', '');
+        }
+
+        // Save to centralized storage
+        function saveToLocalStorage() {
+            const productId = getCurrentProductId();
+            const centralKey = 'airfryer_products_data';
+            
+            // Get current descriptions
+            const featureList = document.getElementById('featureList');
+            const productDescription = document.getElementById('productDescription') || 
+                                    document.querySelector('.description-text');
+            
+            // Extract text from feature list
+            let featureText = '';
+            if (featureList) {
+                const ul = featureList.querySelector('ul');
+                if (ul) {
+                    const items = Array.from(ul.querySelectorAll('li'));
+                    featureText = items.map(li => li.textContent.trim()).join('\n');
+                }
+            }
+            
+            // Extract text from description
+            let descText = '';
+            if (productDescription) {
+                const editIndicator = productDescription.querySelector('.edit-indicator');
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = productDescription.innerHTML;
+                if (editIndicator) {
+                    const ind = tempDiv.querySelector('.edit-indicator');
+                    if (ind) ind.remove();
+                }
+                descText = tempDiv.textContent.trim();
+            }
+            
+            // Combine both into one description
+            const fullDescription = featureText + '\n\n' + descText;
+            
+            // Update centralized storage
+            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            const product = data.find(p => p.id === productId);
+            
+            if (product) {
+                product.description = fullDescription;
+                product.featureList = featureText;
+                product.productDescription = descText;
+                product.lastModified = new Date().toISOString();
+            } else {
+                data.push({
+                    id: productId,
+                    description: fullDescription,
+                    featureList: featureText,
+                    productDescription: descText,
+                    lastModified: new Date().toISOString()
+                });
+            }
+            
+            localStorage.setItem(centralKey, JSON.stringify(data));
+            console.log('Saved to centralized storage, product:', productId);
+        }
+
+        // Load from centralized storage
+        function loadFromLocalStorage() {
+            const productId = getCurrentProductId();
+            const centralKey = 'airfryer_products_data';
+            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            
+            const product = data.find(p => p.id === productId);
+            
+            if (product) {
+                // Load feature list if available
+                if (product.featureList && document.getElementById('featureList')) {
+                    const featureList = document.getElementById('featureList');
+                    const editIndicator = featureList.querySelector('.edit-indicator');
+                    
+                    featureList.innerHTML = '';
+                    if (editIndicator) {
+                        featureList.appendChild(editIndicator.cloneNode(true));
+                    }
+                    
+                    const ul = document.createElement('ul');
+                    ul.className = 'feature-list';
+                    
+                    const lines = product.featureList.split('\n').filter(line => line.trim());
+                    lines.forEach(line => {
+                        const li = document.createElement('li');
+                        li.innerHTML = line.trim();
+                        ul.appendChild(li);
+                    });
+                    
+                    featureList.appendChild(ul);
+                }
+                
+                // Load product description if available
+                const descElement = document.getElementById('productDescription') || 
+                                document.querySelector('.description-text');
+                
+                if (product.productDescription && descElement) {
+                    const editIndicator = descElement.querySelector('.edit-indicator');
+                    
+                    descElement.innerHTML = '';
+                    if (editIndicator) {
+                        descElement.appendChild(editIndicator.cloneNode(true));
+                    }
+                    
+                    const paragraphs = product.productDescription.split('\n\n').filter(p => p.trim());
+                    paragraphs.forEach(para => {
+                        const p = document.createElement('p');
+                        p.style.marginBottom = '15px';
+                        p.innerHTML = para.trim().replace(/\n/g, '<br>');
+                        descElement.appendChild(p);
+                    });
+                }
+                
+                console.log('Loaded from centralized storage for product:', productId);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Selection System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* Header/Search Section */
+        .search-header {
+            background-color: #131921;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-bar {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .search-btn {
+            padding: 12px 24px;
+            background-color: #febd69;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .search-btn:hover {
+            background-color: #f3a847;
+        }
+
+        /* Products Section */
+        .products-section {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: visible;
+            z-index: 1;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .product-name {
+            font-size: 13px;
+            color: #007185;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            height: 55px;
+            overflow: visible;
+            position: relative;
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .product-name-text {
+            height: 55px;
+            overflow: hidden;
+        }
+
+        .product-name:hover {
+            color: #C7511F;
+            z-index: 1000;
+        }
+
+        .product-tooltip {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 60px;
+            background: #232f3e;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            width: 300px;
+            z-index: 10000;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+            line-height: 1.5;
+            max-height: 250px;
+            overflow-y: auto;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .product-tooltip:hover {
+            background: #2a3a4d;
+        }
+
+        .product-tooltip.editing {
+            background: white;
+            color: #0F1111;
+            border: 2px solid #FFD814;
+            cursor: text;
+        }
+
+        .product-tooltip[contenteditable="true"] {
+            outline: none;
+        }
+
+        .edit-hint {
+            font-size: 10px;
+            color: #888;
+            margin-top: 8px;
+            font-style: italic;
+            display: none;
+        }
+
+        .product-tooltip:hover .edit-hint {
+            display: block;
+        }
+
+        /* Modal overlay for editing */
+        .edit-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+        }
+
+        .edit-overlay.active {
+            display: block;
+        }
+
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .edit-modal.active {
+            display: block;
+        }
+
+        .edit-modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .edit-modal-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #FFD814;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+        }
+
+        .edit-modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .edit-modal-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .edit-modal-save {
+            background-color: #FFD814;
+            color: #0F1111;
+        }
+
+        .edit-modal-save:hover {
+            background-color: #F7CA00;
+        }
+
+        .edit-modal-cancel {
+            background-color: white;
+            color: #0F1111;
+            border: 1px solid #D5D9D9;
+        }
+
+        .edit-modal-cancel:hover {
+            background-color: #F7FAFA;
+        }
+
+        .product-name:hover .product-tooltip {
+            display: block;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .stars {
+            color: #ffa41c;
+        }
+
+        .review-count {
+            color: #007185;
+            font-size: 11px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #B12704;
+        }
+
+        /* AI Selector Section */
+        .ai-selector-section {
+            max-width: 1400px;
+            margin: 60px auto 40px;
+            padding: 0 20px;
+        }
+
+        .ai-selector-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .ai-selector-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .ai-selector-subtitle {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .ranking-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .ranking-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            transition: all 0.3s;
+        }
+
+        
+
+        .rank-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff9800;
+            margin-right: 30px;
+            min-width: 50px;
+        }
+
+        .rank-number.top {
+            color: #4caf50;
+        }
+
+        .ranking-product-info {
+            flex: 1;
+        }
+
+        .ranking-product-name {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .ranking-reason {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        
+
+        .ranking-reason.editing {
+            background-color: #fff;
+            border: 2px solid #FFD814;
+            cursor: text;
+        }
+
+        .ranking-reason[contenteditable="true"] {
+            outline: none;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            max-width: 1400px;
+            margin: 40px auto 60px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .action-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .clear-btn {
+            background-color: white;
+            color: #0F1111;
+            border: 1px solid #D5D9D9;
+        }
+
+        .clear-btn:hover {
+            background-color: #F7FAFA;
+            border-color: #999;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .ai-generate-btn {
+            background-color: #FFD814;
+            color: #0F1111;
+            border: 1px solid #FCD200;
+        }
+
+        .ai-generate-btn:hover {
+            background-color: #F7CA00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255,216,20,0.3);
+        }
+
+        @media (max-width: 1200px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Search Header -->
+    <div class="search-header">
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search for products..." value="airfryer">
+            <button class="search-btn">Search</button>
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="products-section">
+        <h2 class="section-title">1-10 of 82 results for "airfryer"</h2>
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <a href="products/product-detail-breville.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/51jCxzgxYwL._AC_SX425_.jpg" alt="Breville Smart Oven" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        Breville BOV900BSS Smart Oven Air Fryer Pro and Convection Oven, Brushed Stainless Steel
+                    </div>
+                    <div class="product-tooltip">
+                        The Breville Smart Oven Air Fryer Pro with Element iQ System is a versatile countertop oven allowing you to roast, air fry and dehydrate; Super convection reduces cooking time by up to 30%; Choose from 13 cooking functions
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="review-count">(11,872)</span>
+                </div>
+                <div class="product-price">$319.95</div>
+            </a>
+
+            <!-- Product 2 -->
+            <a href="products/product-chefman-6qt.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/71WCBoDBHsL._AC_SX425_.jpg" alt="Chefman Air Fryer 6QT" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        Chefman Air Fryer – 6 QT Compact Airfryer for Quick & Easy Meals, Hi-Fry Technology, Touchscreen Controls - Black
+                    </div>
+                    <div class="product-tooltip">
+                        This compact air fryer handles any culinary challenge. Customize cooking time and temperature with the digital touch screen display or use one of four preset functions for quick, one-touch meals. Perfect for serving 3-5 people. 450°F Hi-Fry Technology for extra crispy results.
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="review-count">(682)</span>
+                </div>
+                <div class="product-price">$69.92</div>
+            </a>
+
+            <!-- Product 3 -->
+            <a href="products/product-chefman-multi.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/71s8nikz44L._AC_SX425_.jpg" alt="Chefman Multifunctional" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        CHEFMAN Multifunctional Digital Air Fryer+ Rotisserie, Dehydrator, Convection Oven, XL 10L Family Size - Black
+                    </div>
+                    <div class="product-tooltip">
+                        Air fry, bake, dehydrate, rotisserie, or roast to crispy perfection. Cook faster with no need to preheat. Make healthy meals using 98% less oil. Extra-large 10-Liter capacity perfect for families. 17 preset options with easy touch control screen.
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★☆</span>
+                    <span class="review-count">(44,968)</span>
+                </div>
+                <div class="product-price">$99.99</div>
+            </a>
+
+            <!-- Product 4 -->
+            <a href="products/product-chefman-4qt.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/71Ld+1SBc5L._AC_SX425_.jpg" alt="Chefman Air Fryer 4QT" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        Chefman Air Fryer – 4 QT Compact Airfryer, Hi-Fry Technology, Touchscreen Controls with 4 Presets - Black
+                    </div>
+                    <div class="product-tooltip">
+                        Compact air fryer with 450°F Hi-Fry Technology. Customize cooking time and temperature with digital touch screen. Perfect for serving 2-4 people. Stylish, compact design great for small kitchens. Nonstick basket is dishwasher safe.
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="review-count">(1,243)</span>
+                </div>
+                <div class="product-price">$79.99</div>
+            </a>
+
+            <!-- Product 5 -->
+            <a href="products/product-seedeem.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/71RwJQPxAyL._AC_SX425_.jpg" alt="SEEDEEM Max XL" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        SEEDEEM Max XL Air Fryer 8QT, 10-in-1 Digital Air Fryer Oven with Color Touchscreen & Viewing Window – Black
+                    </div>
+                    <div class="product-tooltip">
+                        10 preset menus including French Fries, Fried Chicken, Vegetables, Baking. Large color touchscreen with full touch design. 3D Air Circulation Heating with 1800W element. Pull-out power-off memory and flip reminder function.
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★☆</span>
+                    <span class="review-count">(15)</span>
+                </div>
+                <div class="product-price">$97.31</div>
+            </a>
+
+            <!-- Product 6 -->
+            <a href="products/product-beelicious.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/71RT6mHyeKL._AC_SX425_.jpg" alt="Beelicious Air Fryer" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        Air Fryer, Beelicious 8-In-One Smart Compact 4QT Air Fryers, Viewing Window, 450°F Digital Airfryer - Pink
+                    </div>
+                    <div class="product-tooltip">
+                        MAX Tender Flavor-Lock Tech with 360° rapid airflow. 8 cooking modes with Chef-Made Recipes. Industry-leading temperatures up to 450°F. Large viewing window with light. 53dB Low-noise design. Dishwasher-safe basket.
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="review-count">(35)</span>
+                </div>
+                <div class="product-price">$69.99</div>
+            </a>
+
+            <!-- Product 7 -->
+            <a href="products/product-turbofry.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/71cmC7OFHqL._AC_SX425_.jpg" alt="Chefman TurboFry" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        Chefman TurboFry® Touch Air Fryer, XL 8-Qt Family Size, One-Touch Digital Control Presets, Stainless Steel
+                    </div>
+                    <div class="product-tooltip">
+                        XL 8-Qt Family Size for 4-6 people. One-Touch Digital Control Presets for fries, chicken, fish, and meat. Crispy delights with 98% less oil. LED shake reminder for even crispiness. Dishwasher-safe basket and tray.
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="review-count">(15,475)</span>
+                </div>
+                <div class="product-price">$89.99</div>
+            </a>
+
+            <!-- Product 8 -->
+            <a href="products/product-fullwill.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/81Y0xshGU5L._AC_SX425_.jpg" alt="Fullwill Vision Pro" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        Fullwill Vision Pro 6QT Air Fryer with Viewing Window, 12 Presets, Non-Stick and PFOA-Free
+                    </div>
+                    <div class="product-tooltip">
+                        Base and Upper heating for even cooking. 12 ingredient-specific presets including chicken wings, steak, fries. Built-in viewing window to monitor progress. Enjoy foods with up to 85% less oil. 6-quart capacity for family meals.
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★☆</span>
+                    <span class="review-count">(54)</span>
+                </div>
+                <div class="product-price">$49.99</div>
+            </a>
+
+            <!-- Product 9 -->
+            <a href="products/product-gourmia.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/7154P20kQvL._AC_SX425_.jpg" alt="Gourmia Air Fryer" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        Gourmia Air Fryer Oven Digital Display 4 Quart Large AirFryer Cooker 12 Cooking Presets, Black
+                    </div>
+                    <div class="product-tooltip">
+                        #1 BESTSELLING Airfryer Brand in USA 2023. 4 Quart capacity. 12 One-Touch Digital Presets. FryForce 360° Technology fries with air for up to 80% less fat. Nonstick basket and crisper tray are dishwasher safe.
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="review-count">(3,372)</span>
+                </div>
+                <div class="product-price">$36.94</div>
+            </a>
+
+            <!-- Product 10 -->
+            <a href="products/product-ninja.html" class="product-card">
+                <img src="https://m.media-amazon.com/images/I/71ikTqH2kiL._AC_SX425_.jpg" alt="Ninja Crispi" class="product-image">
+                <div class="product-name">
+                    <div class="product-name-text">
+                        Ninja Crispi 4-in-1 Portable Glass Air Fryer Cooking System, 1500W, 4QT TempWare Glass, Cyberspace Gray
+                    </div>
+                    <div class="product-tooltip">
+                        Portable 4-in-1 Glass Air Fryer with 1500W power. Includes 4-qt and 6-cup TempWare glass containers. Thermal shock resistant borosilicate glass. Max Crisp, Bake, Air Fry & Recrisp functions. Microwave and dishwasher safe.
+                        <div class="edit-hint">Click to edit description</div>
+                    </div>
+                </div>
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="review-count">(2,332)</span>
+                </div>
+                <div class="product-price">$159.95</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- AI Selector Section -->
+    <div class="ai-selector-section">
+        <div class="ai-selector-header">
+            <h1 class="ai-selector-title">AI Selector</h1>
+            <p class="ai-selector-subtitle">Smart recommendations based on customer preferences and product analysis</p>
+        </div>
+
+        <div class="ranking-container">
+            <h2 class="ranking-title">Recommended Rankings for You</h2>
+
+            <div class="ranking-item">
+                <div class="rank-number top">1</div>
+                <div class="ranking-product-info">
+                    <div class="ranking-product-name">Best Overall / Most Versatile: Breville Smart Oven Air Fryer Pro</div>
+                    <div class="ranking-reason">
+                        <strong>Brief Description:</strong> A premium, large-capacity countertop oven that replaces your toaster and pizza oven, with a dedicated and powerful air fry function. Its Smart Element iQ system intelligently directs heat for perfect results.<br><br>
+                        <strong>Pros:</strong> Extremely versatile with 13 cooking functions (Air Fry, Bake, Roast, Dehydrate, Proof, etc.). Huge interior fits a 14 lb turkey or a 9x13 inch pan. Super convection fan reduces cooking time by up to 30%. Very even cooking thanks to smart algorithms and multiple heating elements.<br><br>
+                        <strong>Cons:</strong> High price point. Large footprint, requires significant counter space.
+                    </div>
+                </div>
+            </div>
+
+            <div class="ranking-item">
+                <div class="rank-number">2</div>
+                <div class="ranking-product-info">
+                    <div class="ranking-product-name">Best Value for a Large Family: Chefman Multifunctional Digital Air Fryer+ with Rotisserie</div>
+                    <div class="ranking-reason">
+                        <strong>Brief Description:</strong> An extra-large 10-liter (approx. 10.5 QT) air fryer that also functions as a rotisserie oven, dehydrator, and convection oven, all controlled via a touch screen.<br><br>
+                        <strong>Pros:</strong> Excellent value, packing rotisserie and dehydrator functions. Huge 10L capacity is ideal for family meals and meal prepping. 17 easy-to-use preset functions for various foods. Includes viewing window and interior light.<br><br>
+                        <strong>Cons:</strong> As an all-in-one unit, it may have a larger learning curve than a simple basket-style fryer.
+                    </div>
+                </div>
+            </div>
+
+            <div class="ranking-item">
+                <div class="rank-number">3</div>
+                <div class="ranking-product-info">
+                    <div class="ranking-product-name">Best for Small Households & Simplicity: Chefman 6 QT Compact Airfryer</div>
+                    <div class="ranking-reason">
+                        <strong>Brief Description:</strong> A modern, digital air fryer with a sleek design that maximizes its 6-quart capacity. It features helpful presets and a "Hi-Fry" boost function for extra crispiness.<br><br>
+                        <strong>Pros:</strong> Clean, compact design saves counter space. Simple to use with 4 presets and a digital touchscreen. "Hi-Fry Technology" boosts heat at the end for perfectly crispy food. Shake reminder ensures even cooking. Dishwasher-safe basket for easy cleaning.<br><br>
+                        <strong>Cons:</strong> Fewer presets and functions than the more versatile models above.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="action-btn clear-btn" onclick="clearRankings()">Clear</button>
+        <button class="action-btn ai-generate-btn" onclick="generateAIRecommendations()">AI Generate</button>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="edit-overlay" id="editOverlay"></div>
+    <div class="edit-modal" id="editModal">
+        <div class="edit-modal-header">Edit Product Description</div>
+        <textarea class="edit-modal-textarea" id="editTextarea"></textarea>
+        <div class="edit-modal-buttons">
+            <button class="edit-modal-btn edit-modal-cancel" onclick="cancelEdit()">Cancel</button>
+            <button class="edit-modal-btn edit-modal-save" onclick="saveModalEdit()">Save</button>
+        </div>
+    </div>
+
+    <script>
+        let currentEditingTooltip = null;
+        let tooltipTimeout = null;
+        let currentTooltip = null;
+
+        // Initialize centralized product data storage
+        function initializeCentralizedStorage() {
+            const centralKey = 'airfryer_products_data';
+            const existing = localStorage.getItem(centralKey);
+            
+            if (!existing) {
+                // Initialize with default data from current page
+                const products = [];
+                const productCards = document.querySelectorAll('.product-card');
+                
+                productCards.forEach((card, index) => {
+                    const name = card.querySelector('.product-name-text').textContent.trim();
+                    const tooltip = card.querySelector('.product-tooltip');
+                    const editHint = tooltip.querySelector('.edit-hint');
+                    let description = tooltip.textContent;
+                    if (editHint) {
+                        description = description.replace('Click to edit description', '').trim();
+                    }
+                    const url = card.getAttribute('href');
+                    
+                    // Extract product ID from URL
+                    const productId = url.replace('products/', '').replace('.html', '');
+                    
+                    products.push({
+                        id: productId,
+                        name: name,
+                        description: description
+                    });
+                });
+                
+                localStorage.setItem(centralKey, JSON.stringify(products));
+                console.log('Initialized centralized storage with', products.length, 'products');
+            }
+        }
+
+        // Add tooltip functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCentralizedStorage();
+            loadFromCentralizedStorage();
+            const productNames = document.querySelectorAll('.product-name');
+            
+            productNames.forEach(name => {
+                const tooltip = name.querySelector('.product-tooltip');
+                let showTimeout = null;
+                
+                name.addEventListener('mouseenter', function(e) {
+                    if (tooltip && !tooltip.isContentEditable) {
+                        // Clear any existing hide timeout
+                        clearTimeout(tooltipTimeout);
+                        
+                        // Add delay before showing tooltip
+                        showTimeout = setTimeout(() => {
+                            tooltip.style.display = 'block';
+                            currentTooltip = tooltip;
+                        }, 500); // 鼠标停留600毫秒后才显示
+                    }
+                });
+                
+                name.addEventListener('mouseleave', function() {
+                    // Cancel show timeout if mouse leaves before tooltip appears
+                    clearTimeout(showTimeout);
+                    
+                    if (tooltip && !tooltip.isContentEditable) {
+                        // Add delay before hiding
+                        tooltipTimeout = setTimeout(() => {
+                            if (tooltip !== currentEditingTooltip) {
+                                tooltip.style.display = 'none';
+                            }
+                        },10);
+                    }
+                });
+
+                // Keep tooltip visible when hovering over it
+                if (tooltip) {
+                    tooltip.addEventListener('mouseenter', function() {
+                        clearTimeout(tooltipTimeout);
+                        clearTimeout(showTimeout);
+                        this.style.display = 'block';
+                    });
+
+                    tooltip.addEventListener('mouseleave', function() {
+                        if (!this.isContentEditable) {
+                            tooltipTimeout = setTimeout(() => {
+                                this.style.display = 'none';
+                            }, 100);
+                        }
+                    });
+                }
+            });
+
+
+            // Add edit functionality to product descriptions
+            initializeEditableDescriptions();
+
+            // Close modal on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('editModal').classList.contains('active')) {
+                    cancelEdit();
+                }
+            });
+        });
+
+        // Initialize editable product descriptions
+        function initializeEditableDescriptions() {
+            const tooltips = document.querySelectorAll('.product-tooltip');
+            
+            tooltips.forEach(tooltip => {
+                // Click to edit - open modal
+                tooltip.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (!currentEditingTooltip) {
+                        clearTimeout(tooltipTimeout);
+                        openEditModal(this);
+                    }
+                });
+            });
+        }
+
+        // Open edit modal
+        function openEditModal(tooltip) {
+            currentEditingTooltip = tooltip;
+            
+            // Get current text (remove edit hint)
+            const editHint = tooltip.querySelector('.edit-hint');
+            let currentText = tooltip.textContent;
+            if (editHint) {
+                currentText = currentText.replace('Click to edit description', '').trim();
+            }
+            
+            originalText = currentText;
+            
+            // Set textarea value
+            document.getElementById('editTextarea').value = currentText;
+            
+            // Show modal and overlay
+            document.getElementById('editOverlay').classList.add('active');
+            document.getElementById('editModal').classList.add('active');
+            
+            // Focus textarea
+            setTimeout(() => {
+                document.getElementById('editTextarea').focus();
+            }, 200);
+            
+            // Hide tooltip
+            tooltip.style.display = 'none';
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Save modal edit
+        function saveModalEdit() {
+            const newText = document.getElementById('editTextarea').value.trim();
+            
+            if (currentEditingTooltip) {
+                // Update tooltip text
+                const editHint = currentEditingTooltip.querySelector('.edit-hint');
+                if (editHint) {
+                    editHint.remove();
+                }
+                
+                currentEditingTooltip.textContent = newText;
+                
+                // Re-add edit hint
+                const newEditHint = document.createElement('div');
+                newEditHint.className = 'edit-hint';
+                newEditHint.textContent = 'Click to edit description';
+                currentEditingTooltip.appendChild(newEditHint);
+                
+                // Get product ID from the card
+                const productCard = currentEditingTooltip.closest('.product-card');
+                const url = productCard.getAttribute('href');
+                const productId = url.replace('products/', '').replace('.html', '');
+                
+                // Update centralized storage
+                updateCentralizedStorage(productId, newText);
+                
+                // Show saved notification
+                const originalBg = productCard.style.backgroundColor;
+                productCard.style.backgroundColor = '#d4edda';
+                setTimeout(() => {
+                    productCard.style.backgroundColor = originalBg;
+                }, 500);
+                
+                console.log('Product description saved:', newText);
+            }
+            
+            closeEditModal();
+        }
+
+        // Update centralized storage
+        function updateCentralizedStorage(productId, newDescription) {
+            const centralKey = 'airfryer_products_data';
+            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            
+            const product = data.find(p => p.id === productId);
+            if (product) {
+                product.description = newDescription;
+                product.lastModified = new Date().toISOString();
+            } else {
+                // If not found, add new entry
+                data.push({
+                    id: productId,
+                    description: newDescription,
+                    lastModified: new Date().toISOString()
+                });
+            }
+            
+            localStorage.setItem(centralKey, JSON.stringify(data));
+            console.log('Updated centralized storage for product:', productId);
+        }
+
+        // Load from centralized storage
+        function loadFromCentralizedStorage() {
+            const centralKey = 'airfryer_products_data';
+            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            
+            const productCards = document.querySelectorAll('.product-card');
+            
+            productCards.forEach(card => {
+                const url = card.getAttribute('href');
+                const productId = url.replace('products/', '').replace('.html', '');
+                
+                const product = data.find(p => p.id === productId);
+                if (product && product.description) {
+                    const tooltip = card.querySelector('.product-tooltip');
+                    if (tooltip) {
+                        const editHint = tooltip.querySelector('.edit-hint');
+                        if (editHint) {
+                            editHint.remove();
+                        }
+                        
+                        tooltip.textContent = product.description;
+                        
+                        // Re-add edit hint
+                        const newEditHint = document.createElement('div');
+                        newEditHint.className = 'edit-hint';
+                        newEditHint.textContent = 'Click to edit description';
+                        tooltip.appendChild(newEditHint);
+                    }
+                }
+            });
+            
+            console.log('Loaded descriptions from centralized storage');
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            closeEditModal();
+        }
+
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('editOverlay').classList.remove('active');
+            document.getElementById('editModal').classList.remove('active');
+            document.body.style.overflow = '';
+            currentEditingTooltip = null;
+            originalText = '';
+        }
+
+        // Clear rankings function
+        function clearRankings() {
+            // Prevent if editing
+            if (currentEditingTooltip) {
+                alert('Please finish editing before clearing rankings.');
+                return;
+            }
+            
+            const rankingContainer = document.querySelector('.ranking-container');
+            const rankingItems = rankingContainer.querySelectorAll('.ranking-item');
+            
+            // Add fade out animation
+            rankingItems.forEach(item => {
+                item.style.transition = 'opacity 0.5s';
+                item.style.opacity = '0';
+            });
+            
+            setTimeout(() => {
+                rankingItems.forEach(item => item.remove());
+                
+                // Show message
+                const message = document.createElement('div');
+                message.style.textAlign = 'center';
+                message.style.padding = '40px';
+                message.style.color = '#666';
+                message.style.fontSize = '18px';
+                message.innerHTML = 'Rankings cleared. Click "AI Generate" to create new recommendations.';
+                rankingContainer.appendChild(message);
+            }, 500);
+        }
+
+        // AI Generate function
+        function generateAIRecommendations() {
+            // Prevent if editing
+            if (currentEditingTooltip) {
+                alert('Please finish editing before generating recommendations.');
+                return;
+            }
+            
+            console.log('Starting AI generation...');
+            
+            // Collect all product data with current descriptions
+            const products = [];
+            const productCards = document.querySelectorAll('.product-card');
+            
+            console.log('Found', productCards.length, 'product cards');
+            
+            productCards.forEach((card, index) => {
+                try {
+                    const nameElement = card.querySelector('.product-name-text');
+                    const tooltip = card.querySelector('.product-tooltip');
+                    const priceElement = card.querySelector('.product-price');
+                    const ratingElement = card.querySelector('.rating-count');
+                    
+                    // 添加空值检查
+                    if (!nameElement || !tooltip || !priceElement) {
+                        console.warn('Skipping card', index, '- missing elements');
+                        return;
+                    }
+                    
+                    const name = nameElement.textContent.trim();
+                    const editHint = tooltip.querySelector('.edit-hint');
+                    let description = tooltip.textContent;
+                    if (editHint) {
+                        description = description.replace('Click to edit description', '').trim();
+                    }
+                    const price = priceElement.textContent.trim();
+                    const rating = ratingElement ? ratingElement.textContent.trim() : 'N/A';
+                    const url = card.getAttribute('href') || '#';
+                    
+                    products.push({
+                        name: name,
+                        description: description,
+                        price: price,
+                        rating: rating,
+                        url: url
+                    });
+                    
+                    console.log('Added product:', name);
+                } catch (error) {
+                    console.error('Error processing card', index, ':', error);
+                }
+            });
+            
+            console.log('Total products collected:', products.length);
+            
+            if (products.length === 0) {
+                alert('No products found to analyze!');
+                return;
+            }
+            
+            // Show loading state
+            const rankingContainer = document.querySelector('.ranking-container');
+            if (!rankingContainer) {
+                console.error('Ranking container not found!');
+                alert('Error: Ranking container not found');
+                return;
+            }
+            
+            const existingItems = rankingContainer.querySelectorAll('.ranking-item');
+            existingItems.forEach(item => item.remove());
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.style.textAlign = 'center';
+            loadingDiv.style.padding = '40px';
+            loadingDiv.style.color = '#666';
+            loadingDiv.innerHTML = '<p style="font-size: 18px;">🤖 AI is analyzing products...</p><p style="margin-top: 10px;">Generating personalized rankings based on descriptions...</p>';
+            rankingContainer.appendChild(loadingDiv);
+            
+            console.log('Calling API...');
+            
+            // Call API to generate rankings
+            callDeepSeekAPI(products)
+                .then(rankings => {
+                    console.log('API returned rankings:', rankings);
+                    loadingDiv.remove();
+                    displayRankings(rankings);
+                })
+                .catch(error => {
+                    console.error('API call failed:', error);
+                    loadingDiv.innerHTML = '<p style="color: red;">Error generating recommendations: ' + error.message + '</p>';
+                });
+        }
+
+
+        // Mock API call function
+        async function callDeepSeekAPI(products) {
+            const DEEPSEEK_API_KEY = "sk-NvCpIJxe34WsolBPpvZFdehsVtwMuKGiqrjS0RdupBUP7gGI";
+            const API_URL = "https://api.probex.top/v1/chat/completions";
+            
+            // 构建上下文
+            let context = "Here are the air fryer products with their descriptions:\n\n";
+            products.forEach((product, index) => {
+                context += `${index + 1}. ${product.name}\n`;
+                context += `   Description: ${product.description}\n`;
+                context += `   Price: ${product.price}\n`;
+                context += `   Rating: ${product.rating}\n`;
+                context += `   URL: ${product.url}\n\n`;
+            });
+            
+            // 构建 prompt
+            const prompt = context + `
+        Based on the above products and their descriptions, please recommend the top 3 air fryers.
+
+        For each recommendation, provide:
+        1. A category/title (e.g., "Best Overall", "Best Value", "Best for Small Households")
+        2. The product name
+        3. A brief description (2-3 sentences)
+        4. Key pros (3-4 bullet points)
+        5. Key cons (1-2 bullet points)
+
+        Format your response as JSON array with this structure:
+        [
+        {
+            "rank": 1,
+            "category": "Best Overall / Most Versatile",
+            "product_name": "Product Name Here",
+            "brief_description": "Description here",
+            "pros": "Pros here as a paragraph with bullet points in text",
+            "cons": "Cons here as a paragraph with bullet points in text"
+        }
+        ]
+
+        Return ONLY the JSON array, no additional text.`;
+
+            try {
+                // 调用 API
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            {
+                                role: "user",
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const content = data.choices[0].message.content.trim();
+                
+                // 解析 JSON 响应
+                const jsonMatch = content.match(/\[[\s\S]*\]/);
+                if (jsonMatch) {
+                    return JSON.parse(jsonMatch[0]);
+                } else {
+                    throw new Error('Invalid API response format');
+                }
+            } catch (error) {
+                console.error('API Error:', error);
+                return getFallbackRankings(products);
+            }
+        }
+
+        // Display rankings in the UI
+        function displayRankings(rankings) {
+            const rankingContainer = document.querySelector('.ranking-container');
+            
+            rankings.forEach((ranking, index) => {
+                const rankingItem = document.createElement('div');
+                rankingItem.className = 'ranking-item';
+                
+                const rankNumber = document.createElement('div');
+                rankNumber.className = index === 0 ? 'rank-number top' : 'rank-number';
+                rankNumber.textContent = ranking.rank || (index + 1);
+                
+                const productInfo = document.createElement('div');
+                productInfo.className = 'ranking-product-info';
+                
+                const productName = document.createElement('div');
+                productName.className = 'ranking-product-name';
+                productName.textContent = `${ranking.category}: ${ranking.product_name}`;
+                
+                const reason = document.createElement('div');
+                reason.className = 'ranking-reason';
+                reason.innerHTML = `<strong>Brief Description:</strong> ${ranking.brief_description}<br><br>` +
+                                `<strong>Pros:</strong> ${ranking.pros}<br><br>` +
+                                `<strong>Cons:</strong> ${ranking.cons}`;
+                
+                productInfo.appendChild(productName);
+                productInfo.appendChild(reason);
+                
+                rankingItem.appendChild(rankNumber);
+                rankingItem.appendChild(productInfo);
+                
+                rankingContainer.appendChild(rankingItem);
+            });
+        }
+        function getFallbackRankings(products) {
+            return [
+                {
+                    rank: 1,
+                    category: "Best Overall / Most Versatile",
+                    product_name: products[0].name,
+                    brief_description: "A premium, versatile option based on the current product descriptions.",
+                    pros: "High ratings and comprehensive features. Excellent value for money. User-friendly design.",
+                    cons: "May require more counter space. Higher price point."
+                },
+                {
+                    rank: 2,
+                    category: "Best Value",
+                    product_name: products[2].name,
+                    brief_description: "Great balance of features and affordability.",
+                    pros: "Competitive pricing. Good capacity for families. Multiple cooking functions.",
+                    cons: "Learning curve for advanced features."
+                },
+                {
+                    rank: 3,
+                    category: "Best for Small Households",
+                    product_name: products[1].name,
+                    brief_description: "Compact and efficient for everyday use.",
+                    pros: "Space-saving design. Simple operation. Easy to clean.",
+                    cons: "Smaller capacity. Fewer preset options."
+                }
+            ];
+        }
+    </script>
+</body>
+</html>
