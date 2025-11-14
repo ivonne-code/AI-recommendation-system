@@ -459,14 +459,14 @@
     <!-- Search Header -->
     <div class="search-header">
         <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search for products..." value="airfryer">
+            <input type="text" class="search-bar" placeholder="Search for products..." value="air fryer">
             <button class="search-btn">Search</button>
         </div>
     </div>
 
     <!-- Products Section -->
     <div class="products-section">
-        <h2 class="section-title">1-10 of 82 results for "airfryer"</h2>
+        <h2 class="section-title">1-10 of 82 results for "air fryer"</h2>
         <div class="products-grid">
             <!-- Product 1 -->
             <a href="products/product-detail-breville.html" class="product-card">
@@ -659,7 +659,13 @@
             </a>
         </div>
     </div>
-
+    <!-- Disclaimer -->
+    <div style="max-width: 1400px; margin: 40px auto 30px; padding: 30px 20px; text-align: center; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;">
+        <p style="color: #666; font-size: 14px; font-style: italic; margin: 0;">
+            <strong>Disclaimer:</strong> All materials are made for experimental use only. This is a research prototype and not affiliated with Amazon.
+        </p>
+    </div>
+    
     <!-- AI Selector Section -->
     <div class="ai-selector-section">
         <div class="ai-selector-header">
@@ -784,7 +790,7 @@
                         showTimeout = setTimeout(() => {
                             tooltip.style.display = 'block';
                             currentTooltip = tooltip;
-                        }, 500); // 鼠标停留600毫秒后才显示
+                        }, 500); // 鼠标停留500毫秒后才显示
                     }
                 });
                 
@@ -1193,6 +1199,8 @@
                 }
             } catch (error) {
                 console.error('API Error:', error);
+                // Fallback to default recommendations
+                alert(`⚠️ API Error\n\n${error.message}\n\nUsing fallback recommendations.`);
                 return getFallbackRankings(products);
             }
         }
