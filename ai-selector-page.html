@@ -774,7 +774,6 @@
         // Add tooltip functionality
         document.addEventListener('DOMContentLoaded', function() {
             initializeCentralizedStorage();
-            loadFromCentralizedStorage();
             const productNames = document.querySelectorAll('.product-name');
             
             productNames.forEach(name => {
@@ -836,7 +835,56 @@
                     cancelEdit();
                 }
             });
+            loadSavedAIRankings();
         });
+        function loadSavedAIRankings() {
+            const saved = localStorage.getItem('ai_rankings');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    const container = document.querySelector('.ranking-container');
+                    if (container && data.rankings && data.rankings.length > 0) {
+                        // 清空容器
+                        container.innerHTML = '<h2 class="ranking-title">Recommended Rankings for You</h2>';
+                        
+                        // ✅ 直接调用 displayRankings 来渲染
+                        data.rankings.forEach((ranking, index) => {
+                            const rankingItem = document.createElement('div');
+                            rankingItem.className = 'ranking-item';
+                            
+                            const rankNumber = document.createElement('div');
+                            rankNumber.className = index === 0 ? 'rank-number top' : 'rank-number';
+                            rankNumber.textContent = ranking.rank || (index + 1);
+                            
+                            const productInfo = document.createElement('div');
+                            productInfo.className = 'ranking-product-info';
+                            
+                            const productName = document.createElement('div');
+                            productName.className = 'ranking-product-name';
+                            productName.textContent = `${ranking.category}: ${ranking.product_name}`;
+                            
+                            const reason = document.createElement('div');
+                            reason.className = 'ranking-reason';
+                            reason.innerHTML = `<strong>Brief Description:</strong> ${ranking.brief_description}<br><br>` +
+                                            `<strong>Pros:</strong> ${ranking.pros}<br><br>` +
+                                            `<strong>Cons:</strong> ${ranking.cons}`;
+                            
+                            productInfo.appendChild(productName);
+                            productInfo.appendChild(reason);
+                            
+                            rankingItem.appendChild(rankNumber);
+                            rankingItem.appendChild(productInfo);
+                            
+                            container.appendChild(rankingItem);
+                        });
+                        
+                        console.log('Loaded saved AI rankings from localStorage');
+                    }
+                } catch (e) {
+                    console.error('Error loading AI rankings:', e);
+                }
+            }
+        }
 
         // Initialize editable product descriptions
         function initializeEditableDescriptions() {
@@ -949,7 +997,8 @@
             localStorage.setItem(centralKey, JSON.stringify(data));
             console.log('Updated centralized storage for product:', productId);
         }
-
+/*
+//已禁用 - tooltip 不从 storage 同步
         // Load from centralized storage
         function loadFromCentralizedStorage() {
             const centralKey = 'airfryer_products_data';
@@ -983,6 +1032,7 @@
             
             console.log('Loaded descriptions from centralized storage');
         }
+        */
 
         // Cancel edit
         function cancelEdit() {
@@ -1017,7 +1067,8 @@
             
             setTimeout(() => {
                 rankingItems.forEach(item => item.remove());
-                
+                // 清除保存的排名
+                localStorage.removeItem('ai_rankings');
                 // Show message
                 const message = document.createElement('div');
                 message.style.textAlign = 'center';
@@ -1238,6 +1289,14 @@
                 
                 rankingContainer.appendChild(rankingItem);
             });
+            saveAIRankings(rankings);
+        }
+        function saveAIRankings(rankings) {
+            localStorage.setItem('ai_rankings', JSON.stringify({
+                rankings: rankings,
+                timestamp: new Date().toISOString()
+            }));
+            console.log('AI rankings saved to localStorage');
         }
         function getFallbackRankings(products) {
             return [

@@ -567,13 +567,27 @@
             
             originalContent = content;
             
-            // Convert HTML to text for editing
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = content;
-            const textContent = tempDiv.innerText || tempDiv.textContent;
+            // Extract content with HTML preserved
+            let textForEditing = '';
             
+            if (element.id === 'featureList') {
+                // For feature list, extract each <li> with HTML preserved
+                const items = element.querySelectorAll('li');
+                textForEditing = Array.from(items).map(li => li.innerHTML.trim()).join('\n---\n');
+            } else {
+                // For description, extract each <p> with HTML preserved
+                const paragraphs = element.querySelectorAll('p');
+                if (paragraphs.length > 0) {
+                    textForEditing = Array.from(paragraphs).map(p => p.innerHTML.trim()).join('\n\n');
+                } else {
+                    // Fallback if no <p> tags
+                    textForEditing = content;
+                }
+            }
+            
+                      
             // Set textarea value
-            document.getElementById('editTextarea').value = textContent.trim();
+            document.getElementById('editTextarea').value = textForEditing;
             
             // Show modal and overlay
             document.getElementById('editOverlay').classList.add('active');
@@ -587,6 +601,7 @@
             // Prevent body scroll
             document.body.style.overflow = 'hidden';
         }
+
 
         function saveEdit() {
             const newText = document.getElementById('editTextarea').value.trim();
@@ -609,7 +624,7 @@
                     const ul = document.createElement('ul');
                     ul.className = 'feature-list';
                     
-                    const lines = newText.split('\n').filter(line => line.trim());
+                    const lines = newText.split(/\n---\n|\n/).filter(line => line.trim());
                     lines.forEach(line => {
                         const li = document.createElement('li');
                         li.innerHTML = line.trim();
