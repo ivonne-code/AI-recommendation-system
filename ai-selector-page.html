@@ -463,7 +463,66 @@
             <button class="search-btn">Search</button>
         </div>
     </div>
+    <!-- AI Selector Section -->
+    <div class="ai-selector-section">
+        <div class="ai-selector-header">
+            <h1 class="ai-selector-title">AI Selector</h1>
+            <p class="ai-selector-subtitle">Smart recommendations based on customer preferences and product analysis</p>
+        </div>
 
+        <div class="ranking-container">
+            <h2 class="ranking-title">Recommended Rankings for You</h2>
+
+            <div class="ranking-item">
+                <div class="rank-number top">1</div>
+                <div class="ranking-product-info">
+                    <div class="ranking-product-name">Best Overall / Most Versatile: Breville Smart Oven Air Fryer Pro</div>
+                    <div class="ranking-reason">
+                        <strong>Brief Description:</strong> A premium, large-capacity countertop oven that replaces your toaster and pizza oven, with a dedicated and powerful air fry function. Its Smart Element iQ system intelligently directs heat for perfect results.<br><br>
+                        <strong>Pros:</strong> Extremely versatile with 13 cooking functions (Air Fry, Bake, Roast, Dehydrate, Proof, etc.). Huge interior fits a 14 lb turkey or a 9x13 inch pan. Super convection fan reduces cooking time by up to 30%. Very even cooking thanks to smart algorithms and multiple heating elements.<br><br>
+                        <strong>Cons:</strong> High price point. Large footprint, requires significant counter space.
+                    </div>
+                </div>
+            </div>
+
+            <div class="ranking-item">
+                <div class="rank-number">2</div>
+                <div class="ranking-product-info">
+                    <div class="ranking-product-name">Best Value for a Large Family: Chefman Multifunctional Digital Air Fryer+ with Rotisserie</div>
+                    <div class="ranking-reason">
+                        <strong>Brief Description:</strong> An extra-large 10-liter (approx. 10.5 QT) air fryer that also functions as a rotisserie oven, dehydrator, and convection oven, all controlled via a touch screen.<br><br>
+                        <strong>Pros:</strong> Excellent value, packing rotisserie and dehydrator functions. Huge 10L capacity is ideal for family meals and meal prepping. 17 easy-to-use preset functions for various foods. Includes viewing window and interior light.<br><br>
+                        <strong>Cons:</strong> As an all-in-one unit, it may have a larger learning curve than a simple basket-style fryer.
+                    </div>
+                </div>
+            </div>
+
+            <div class="ranking-item">
+                <div class="rank-number">3</div>
+                <div class="ranking-product-info">
+                    <div class="ranking-product-name">Best for Small Households & Simplicity: Chefman 6 QT Compact Airfryer</div>
+                    <div class="ranking-reason">
+                        <strong>Brief Description:</strong> A modern, digital air fryer with a sleek design that maximizes its 6-quart capacity. It features helpful presets and a "Hi-Fry" boost function for extra crispiness.<br><br>
+                        <strong>Pros:</strong> Clean, compact design saves counter space. Simple to use with 4 presets and a digital touchscreen. "Hi-Fry Technology" boosts heat at the end for perfectly crispy food. Shake reminder ensures even cooking. Dishwasher-safe basket for easy cleaning.<br><br>
+                        <strong>Cons:</strong> Fewer presets and functions than the more versatile models above.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="action-btn clear-btn" onclick="clearRankings()">Clear</button>
+        <button class="action-btn ai-generate-btn" onclick="generateAIRecommendations()">AI Generate</button>
+    </div>
+    
+    <!-- Disclaimer -->
+    <div style="max-width: 1400px; margin: 40px auto 30px; padding: 30px 20px; text-align: center; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;">
+        <p style="color: #B22222; font-size: 28px; font-style: italic; margin: 0;">
+            <strong>Disclaimer:</strong> All materials are made for experimental use only. This is a research prototype and not affiliated with Amazon.
+        </p>
+    </div>
     <!-- Products Section -->
     <div class="products-section">
         <h2 class="section-title">1-10 of 82 results for "air fryer"</h2>
@@ -659,66 +718,7 @@
             </a>
         </div>
     </div>
-    <!-- Disclaimer -->
-    <div style="max-width: 1400px; margin: 40px auto 30px; padding: 30px 20px; text-align: center; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;">
-        <p style="color: #B22222; font-size: 28px; font-style: italic; margin: 0;">
-            <strong>Disclaimer:</strong> All materials are made for experimental use only. This is a research prototype and not affiliated with Amazon.
-        </p>
-    </div>
     
-    <!-- AI Selector Section -->
-    <div class="ai-selector-section">
-        <div class="ai-selector-header">
-            <h1 class="ai-selector-title">AI Selector</h1>
-            <p class="ai-selector-subtitle">Smart recommendations based on customer preferences and product analysis</p>
-        </div>
-
-        <div class="ranking-container">
-            <h2 class="ranking-title">Recommended Rankings for You</h2>
-
-            <div class="ranking-item">
-                <div class="rank-number top">1</div>
-                <div class="ranking-product-info">
-                    <div class="ranking-product-name">Best Overall / Most Versatile: Breville Smart Oven Air Fryer Pro</div>
-                    <div class="ranking-reason">
-                        <strong>Brief Description:</strong> A premium, large-capacity countertop oven that replaces your toaster and pizza oven, with a dedicated and powerful air fry function. Its Smart Element iQ system intelligently directs heat for perfect results.<br><br>
-                        <strong>Pros:</strong> Extremely versatile with 13 cooking functions (Air Fry, Bake, Roast, Dehydrate, Proof, etc.). Huge interior fits a 14 lb turkey or a 9x13 inch pan. Super convection fan reduces cooking time by up to 30%. Very even cooking thanks to smart algorithms and multiple heating elements.<br><br>
-                        <strong>Cons:</strong> High price point. Large footprint, requires significant counter space.
-                    </div>
-                </div>
-            </div>
-
-            <div class="ranking-item">
-                <div class="rank-number">2</div>
-                <div class="ranking-product-info">
-                    <div class="ranking-product-name">Best Value for a Large Family: Chefman Multifunctional Digital Air Fryer+ with Rotisserie</div>
-                    <div class="ranking-reason">
-                        <strong>Brief Description:</strong> An extra-large 10-liter (approx. 10.5 QT) air fryer that also functions as a rotisserie oven, dehydrator, and convection oven, all controlled via a touch screen.<br><br>
-                        <strong>Pros:</strong> Excellent value, packing rotisserie and dehydrator functions. Huge 10L capacity is ideal for family meals and meal prepping. 17 easy-to-use preset functions for various foods. Includes viewing window and interior light.<br><br>
-                        <strong>Cons:</strong> As an all-in-one unit, it may have a larger learning curve than a simple basket-style fryer.
-                    </div>
-                </div>
-            </div>
-
-            <div class="ranking-item">
-                <div class="rank-number">3</div>
-                <div class="ranking-product-info">
-                    <div class="ranking-product-name">Best for Small Households & Simplicity: Chefman 6 QT Compact Airfryer</div>
-                    <div class="ranking-reason">
-                        <strong>Brief Description:</strong> A modern, digital air fryer with a sleek design that maximizes its 6-quart capacity. It features helpful presets and a "Hi-Fry" boost function for extra crispiness.<br><br>
-                        <strong>Pros:</strong> Clean, compact design saves counter space. Simple to use with 4 presets and a digital touchscreen. "Hi-Fry Technology" boosts heat at the end for perfectly crispy food. Shake reminder ensures even cooking. Dishwasher-safe basket for easy cleaning.<br><br>
-                        <strong>Cons:</strong> Fewer presets and functions than the more versatile models above.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <button class="action-btn clear-btn" onclick="clearRankings()">Clear</button>
-        <button class="action-btn ai-generate-btn" onclick="generateAIRecommendations()">AI Generate</button>
-    </div>
 
     <!-- Edit Modal -->
     <div class="edit-overlay" id="editOverlay"></div>
