@@ -398,6 +398,88 @@
             gap: 20px;
         }
 
+        /* API 选择器样式 */
+        .api-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            background: white;
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .api-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            user-select: none;
+            transition: color 0.3s;
+        }
+
+        /* 当对应 API 被选中时高亮标签 */
+        .toggle-switch input:not(:checked) ~ .api-label:first-of-type,
+        .toggle-switch input:checked ~ .api-label:last-of-type {
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* 切换开关样式 */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+            cursor: pointer;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #4A90E2;
+            transition: 0.3s;
+            border-radius: 22px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .toggle-switch input:checked + .slider {
+            background-color: #10A37F;
+        }
+
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .toggle-switch:hover .slider {
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .toggle-switch input:checked:hover + .slider {
+            box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+        }
+
         .action-btn {
             padding: 15px 40px;
             font-size: 18px;
@@ -428,10 +510,15 @@
             border: 1px solid #FCD200;
         }
 
-        .ai-generate-btn:hover {
+        .ai-generate-btn:hover:not(:disabled) {
             background-color: #F7CA00;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(255,216,20,0.3);
+        }
+
+        .ai-generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         @media (max-width: 1200px) {
@@ -514,6 +601,17 @@
     <!-- Action Buttons -->
     <div class="action-buttons">
         <button class="action-btn clear-btn" onclick="clearRankings()">Clear</button>
+        
+        <!-- API 选择器 -->
+        <div class="api-selector">
+            <span class="api-label">DeepSeek</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="apiToggle">
+                <span class="slider"></span>
+            </label>
+            <span class="api-label">OpenAI</span>
+        </div>
+        
         <button class="action-btn ai-generate-btn" onclick="generateAIRecommendations()">AI Generate</button>
     </div>
     
@@ -732,6 +830,18 @@
     </div>
 
     <script>
+        const API_CONFIG = {
+            openai: {
+                url: 'https://api.openai.com/v1/chat/completions',
+                key: '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',
+                model: 'gpt-4o'
+            },
+            deepseek: {
+                url: 'https://api.probex.top/v1/chat/completions',
+                key: 'sk-NvCpIJxe34WsolBPpvZFdehsVtwMuKGiqrjS0RdupBUP7gGI',
+                model: 'deepseek-chat'
+            }
+        };
         let currentEditingTooltip = null;
         let tooltipTimeout = null;
         let currentTooltip = null;
@@ -836,7 +946,14 @@
                 }
             });
             loadSavedAIRankings();
+
+            // Load last used API selection
+            const lastAPI = localStorage.getItem('lastUsedAPI');
+            if (lastAPI === 'openai') {
+                document.getElementById('apiToggle').checked = true;
+            }
         });
+
         function loadSavedAIRankings() {
             const saved = localStorage.getItem('ai_rankings');
             if (saved) {
@@ -1079,10 +1196,140 @@
                 rankingContainer.appendChild(message);
             }, 500);
         }
+        // ============================================
+        // 构建 API Prompt
+        // ============================================
+        function buildPrompt(products) {
+            let context = "Here are the air fryer products with their descriptions:\n\n";
+            products.forEach((product, index) => {
+                context += `${index + 1}. ${product.name}\n`;
+                context += `   Description: ${product.description}\n`;
+                context += `   Price: ${product.price}\n`;
+                context += `   Rating: ${product.rating}\n`;
+                context += `   URL: ${product.url}\n\n`;
+            });
+            
+            return context + `
+Based on the above products and their descriptions, please recommend the top 3 air fryers.
 
-        // AI Generate function
+For each recommendation, provide:
+1. A category/title (e.g., "Best Overall", "Best Value", "Best for Small Households")
+2. The product name
+3. A brief description (2-3 sentences)
+4. Key pros (3-4 bullet points)
+5. Key cons (1-2 bullet points)
+
+Format your response as JSON array with this structure:
+[
+{
+    "rank": 1,
+    "category": "Best Overall / Most Versatile",
+    "product_name": "Product Name Here",
+    "brief_description": "Description here",
+    "pros": "Pros here as a paragraph with bullet points in text",
+    "cons": "Cons here as a paragraph with bullet points in text"
+}
+]
+
+Return ONLY the JSON array, no additional text.`;
+        }
+
+        // OpenAI API 调用
+        async function callOpenAIAPI(products) {
+            const config = API_CONFIG.openai;
+            const prompt = buildPrompt(products);
+            
+            try {
+                console.log('Calling OpenAI API...');
+                
+                const response = await fetch(config.url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${config.key}`
+                    },
+                    body: JSON.stringify({
+                        model: config.model,
+                        messages: [
+                            {
+                                role: "user",
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`OpenAI API request failed (${response.status}): ${errorText}`);
+                }
+                
+                const data = await response.json();
+                const content = data.choices[0].message.content.trim();
+                
+                console.log('OpenAI API response received');
+                
+                const jsonMatch = content.match(/\[[\s\S]*\]/);
+                if (jsonMatch) {
+                    return JSON.parse(jsonMatch[0]);
+                } else {
+                    throw new Error('Invalid OpenAI API response format');
+                }
+            } catch (error) {
+                console.error('OpenAI API Error:', error);
+                throw error;
+            }
+        }
+
+        // DeepSeek API 调用
+        async function callDeepSeekAPI(products) {
+            const config = API_CONFIG.deepseek;
+            const prompt = buildPrompt(products);
+            
+            try {
+                console.log('Calling DeepSeek API...');
+                
+                const response = await fetch(config.url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${config.key}`
+                    },
+                    body: JSON.stringify({
+                        model: config.model,
+                        messages: [
+                            {
+                                role: "user",
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`DeepSeek API request failed: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const content = data.choices[0].message.content.trim();
+                
+                console.log('DeepSeek API response received');
+                
+                const jsonMatch = content.match(/\[[\s\S]*\]/);
+                if (jsonMatch) {
+                    return JSON.parse(jsonMatch[0]);
+                } else {
+                    throw new Error('Invalid DeepSeek API response format');
+                }
+            } catch (error) {
+                console.error('DeepSeek API Error:', error);
+                throw error;
+            }
+        }
+        // AI Generate function - 主函数
         function generateAIRecommendations() {
-            // Prevent if editing
             if (currentEditingTooltip) {
                 alert('Please finish editing before generating recommendations.');
                 return;
@@ -1090,7 +1337,6 @@
             
             console.log('Starting AI generation...');
             
-            // Collect all product data with current descriptions
             const products = [];
             const productCards = document.querySelectorAll('.product-card');
             
@@ -1101,9 +1347,8 @@
                     const nameElement = card.querySelector('.product-name-text');
                     const tooltip = card.querySelector('.product-tooltip');
                     const priceElement = card.querySelector('.product-price');
-                    const ratingElement = card.querySelector('.rating-count');
+                    const ratingElement = card.querySelector('.review-count');
                     
-                    // 添加空值检查
                     if (!nameElement || !tooltip || !priceElement) {
                         console.warn('Skipping card', index, '- missing elements');
                         return;
@@ -1140,7 +1385,6 @@
                 return;
             }
             
-            // Show loading state
             const rankingContainer = document.querySelector('.ranking-container');
             if (!rankingContainer) {
                 console.error('Ranking container not found!');
@@ -1151,111 +1395,61 @@
             const existingItems = rankingContainer.querySelectorAll('.ranking-item');
             existingItems.forEach(item => item.remove());
             
+            // 获取选择的 API
+            const isOpenAI = document.getElementById('apiToggle').checked;
+            const provider = isOpenAI ? 'openai' : 'deepseek';
+            const providerName = isOpenAI ? 'OpenAI' : 'DeepSeek';
+            
             const loadingDiv = document.createElement('div');
             loadingDiv.style.textAlign = 'center';
             loadingDiv.style.padding = '40px';
             loadingDiv.style.color = '#666';
-            loadingDiv.innerHTML = '<p style="font-size: 18px;">🤖 AI is analyzing products...</p><p style="margin-top: 10px;">Generating personalized rankings based on descriptions...</p>';
+            loadingDiv.innerHTML = `<p style="font-size: 18px;">🤖 ${providerName} AI is analyzing products...</p><p style="margin-top: 10px;">Generating personalized rankings based on descriptions...</p>`;
             rankingContainer.appendChild(loadingDiv);
             
-            console.log('Calling API...');
+            // 更新按钮状态
+            const button = document.querySelector('.ai-generate-btn');
+            const originalText = button.textContent;
+            button.textContent = 'Generating...';
+            button.disabled = true;
             
-            // Call API to generate rankings
-            callDeepSeekAPI(products)
+            console.log(`Calling ${providerName} API...`);
+            
+            // 根据选择调用不同的 API
+            const apiCall = isOpenAI ? callOpenAIAPI(products) : callDeepSeekAPI(products);
+            
+            apiCall
                 .then(rankings => {
                     console.log('API returned rankings:', rankings);
                     loadingDiv.remove();
                     displayRankings(rankings);
+                    
+                    // 保存使用的 API
+                    localStorage.setItem('lastUsedAPI', provider);
+                    
+                    button.textContent = '✓ Generated';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }, 2000);
                 })
                 .catch(error => {
                     console.error('API call failed:', error);
-                    loadingDiv.innerHTML = '<p style="color: red;">Error generating recommendations: ' + error.message + '</p>';
+                    loadingDiv.innerHTML = `<p style="color: red;">⚠️ ${providerName} API Error</p><p style="margin-top: 10px;">${error.message}</p><p style="margin-top: 10px;">Using fallback recommendations...</p>`;
+                    
+                    setTimeout(() => {
+                        loadingDiv.remove();
+                        const fallbackRankings = getFallbackRankings(products);
+                        displayRankings(fallbackRankings);
+                    }, 2000);
+                    
+                    button.textContent = '✗ Failed';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }, 2000);
                 });
         }
-
-
-        // Mock API call function
-        async function callDeepSeekAPI(products) {
-            const DEEPSEEK_API_KEY = "sk-NvCpIJxe34WsolBPpvZFdehsVtwMuKGiqrjS0RdupBUP7gGI";
-            const API_URL = "https://api.probex.top/v1/chat/completions";
-            
-            // 构建上下文
-            let context = "Here are the air fryer products with their descriptions:\n\n";
-            products.forEach((product, index) => {
-                context += `${index + 1}. ${product.name}\n`;
-                context += `   Description: ${product.description}\n`;
-                context += `   Price: ${product.price}\n`;
-                context += `   Rating: ${product.rating}\n`;
-                context += `   URL: ${product.url}\n\n`;
-            });
-            
-            // 构建 prompt
-            const prompt = context + `
-        Based on the above products and their descriptions, please recommend the top 3 air fryers.
-
-        For each recommendation, provide:
-        1. A category/title (e.g., "Best Overall", "Best Value", "Best for Small Households")
-        2. The product name
-        3. A brief description (2-3 sentences)
-        4. Key pros (3-4 bullet points)
-        5. Key cons (1-2 bullet points)
-
-        Format your response as JSON array with this structure:
-        [
-        {
-            "rank": 1,
-            "category": "Best Overall / Most Versatile",
-            "product_name": "Product Name Here",
-            "brief_description": "Description here",
-            "pros": "Pros here as a paragraph with bullet points in text",
-            "cons": "Cons here as a paragraph with bullet points in text"
-        }
-        ]
-
-        Return ONLY the JSON array, no additional text.`;
-
-            try {
-                // 调用 API
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        model: "deepseek-chat",
-                        messages: [
-                            {
-                                role: "user",
-                                content: prompt
-                            }
-                        ],
-                        temperature: 0.7
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`API request failed: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                const content = data.choices[0].message.content.trim();
-                
-                // 解析 JSON 响应
-                const jsonMatch = content.match(/\[[\s\S]*\]/);
-                if (jsonMatch) {
-                    return JSON.parse(jsonMatch[0]);
-                } else {
-                    throw new Error('Invalid API response format');
-                }
-            } catch (error) {
-                console.error('API Error:', error);
-                // Fallback to default recommendations
-                alert(`⚠️ API Error\n\n${error.message}\n\nUsing fallback recommendations.`);
-                return getFallbackRankings(products);
-            }
-        }
-
         // Display rankings in the UI
         function displayRankings(rankings) {
             const rankingContainer = document.querySelector('.ranking-container');
