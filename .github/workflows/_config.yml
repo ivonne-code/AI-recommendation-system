@@ -1,0 +1,68 @@
+# Jekyll Configuration for Air Fryer Product Selector
+
+# Site settings
+title: Air Fryer Product Selector
+description: AI-powered product recommendation system for air fryers
+author: Research Project
+lang: en
+
+# GitHub Pages URL settings
+# 重要：根据你的仓库名修改这里！
+# 如果你的仓库是 "username.github.io"，baseurl 留空 ""
+# 如果是其他名字（如 "air-fryer-selector"），设置为 "/仓库名"
+baseurl: "/AI-recommendation-system"
+url: "https://ivonne-code.github.io"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# 禁用主题（因为我们使用自定义 HTML）
+# theme: minima
+
+# Exclude from processing
+# Jekyll 不会处理这些文件
+exclude:
+  - README.md
+  - LICENSE
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/
+  - .sass-cache/
+  - .git/
+  - .gitignore
+  - package.json
+  - package-lock.json
+  - "*.py"
+  - "*.sh"
+  - .DS_Store
+  - api_proxy.py
+  - PROXY_SETUP.md
+  - batch_fix.py
+
+# Include hidden files
+include:
+  - .htaccess
+  - .nojekyll
+
+# Sass/SCSS settings
+sass:
+  style: compressed
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Kramdown settings
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+# Security
+safe: true
+
+# Timezone
+timezone: America/Los_Angeles
