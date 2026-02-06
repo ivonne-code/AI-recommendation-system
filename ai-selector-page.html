@@ -1186,33 +1186,24 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
     <script>
         // API Key 管理函数
         function getAPIConfig() {
-            const customOpenAI = (localStorage.getItem('custom_openai_key') || '').trim();
-            const customDeepSeek = (localStorage.getItem('custom_deepseek_key') || '').trim();
-
-            const config = {
+            const customOpenAI = localStorage.getItem('custom_openai_key');
+            const customDeepSeek = localStorage.getItem('custom_deepseek_key');
+            
+            return {
                 openai: {
-                url: 'https://api.openai.com/v1/chat/completions',
-                key: customOpenAI,
-                model: 'gpt-4o',
-                isCustom: !!customOpenAI
+                    url: 'https://api.openai.com/v1/chat/completions',
+                    key: customOpenAI || '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',
+                    model: 'gpt-4o',
+                    isCustom: !!customOpenAI
                 },
                 deepseek: {
-                url: 'https://api.probex.top/v1/chat/completions',
-                key: customDeepSeek,
-                model: 'deepseek-chat',
-                isCustom: !!customDeepSeek
+                    url: 'https://api.probex.top/v1/chat/completions',
+                    key: customDeepSeek || 'sk-NvCpIJxe34WsolBPpvZFdehsVtwMuKGiqrjS0RdupBUP7gGI',
+                    model: 'deepseek-chat',
+                    isCustom: !!customDeepSeek
                 }
             };
-
-            // 你可以选择：要么允许“只填一个 key”，要么要求两个都填
-            // 这里我按“至少有一个 key 才能用”的逻辑写：
-            if (!config.openai.key && !config.deepseek.key) {
-                throw new Error("No API key set. Please open 'API Keys' and paste your key.");
-            }
-
-            return config;
         }
-
 
         // 打开 API Key 模态框
         function openAPIKeyModal() {
@@ -1246,7 +1237,7 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
                 document.getElementById('openaiKeyInput').value = '';
                 document.getElementById('openaiKeyInput').placeholder = '••••••••••••••••' + customOpenAI.slice(-4);
             } else {
-                openaiStatus.textContent = 'No API key set yet. Please add your API key.';
+                openaiStatus.textContent = 'Using default API key (may have rate limits)';
                 openaiStatus.className = 'api-key-status using-default';
                 openaiStatus.style.display = 'block';
                 document.getElementById('openaiKeyInput').value = '';
@@ -1260,7 +1251,7 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
                 document.getElementById('deepseekKeyInput').value = '';
                 document.getElementById('deepseekKeyInput').placeholder = '••••••••••••••••' + customDeepSeek.slice(-4);
             } else {
-                deepseekStatus.textContent = 'No API key set yet. Please add your API key.';
+                deepseekStatus.textContent = 'Using default API key (may have rate limits)';
                 deepseekStatus.className = 'api-key-status using-default';
                 deepseekStatus.style.display = 'block';
                 document.getElementById('deepseekKeyInput').value = '';
@@ -1332,7 +1323,19 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
             }
         }
 
-        
+        // 保持向后兼容的 API_CONFIG（已弃用，使用 getAPIConfig() 代替）
+        const API_CONFIG = {
+            openai: {
+                url: 'https://api.openai.com/v1/chat/completions',
+                key: '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',
+                model: 'gpt-4o'
+            },
+            deepseek: {
+                url: 'https://api.probex.top/v1/chat/completions',
+                key: 'sk-NvCpIJxe34WsolBPpvZFdehsVtwMuKGiqrjS0RdupBUP7gGI',
+                model: 'deepseek-chat'
+            }
+        };
         let currentEditingTooltip = null;
         let tooltipTimeout = null;
         let currentTooltip = null;
@@ -1366,26 +1369,17 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
                             // ⭐⭐⭐ 核心：优先使用 product_description
                             const description = product.product_description || product.short_description;
                             
-                            const base = (product.product_description || product.short_description || '').trim();
-
                             products.push({
-                            id: asin,
-                            name: product.name,
-                            product_description: product.product_description,
-                            short_description: product.short_description,
-
-                            // ✅ AI 唯一输入的可控字段
-                            ranking_text: base,
-                            originalRankingText: base,   // 可选：想做“回滚实验”就存
-                            hasSuffix: false,
-                            suffixText: '',
-
-                            price: product.price,
-                            rating: product.rating,
-                            number_of_reviews: product.number_of_reviews,
-                            source_url: product.source_url
+                                id: asin,
+                                name: product.name,
+                                description: description,
+                                product_description: product.product_description,
+                                short_description: product.short_description,
+                                price: product.price,
+                                rating: product.rating,
+                                number_of_reviews: product.number_of_reviews,
+                                source_url: product.source_url
                             });
-
                         } catch (e) {
                             console.error(`Error parsing line ${index + 1}:`, e);
                         }
@@ -1652,41 +1646,24 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
         }
 
         // Update centralized storage
-        // ✅ 用商品 name 更新中心数据：同时更新 productDescription + ranking_text
+        // ✅ 用商品 name 更新中心数据（推荐：最少改动）
         function updateCentralizedStorageByName(productName, newDescription) {
             const centralKey = 'airfryer_products_data';
             const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
 
+            // 精确匹配优先；如果怕空格/大小写问题，就用 normalize
             const normalize = s => (s || '').trim().toLowerCase();
             const target = data.find(p => normalize(p.name) === normalize(productName));
 
-            if (!target) {
+            if (target) {
+                target.description = newDescription;
+                target.lastModified = new Date().toISOString();
+                localStorage.setItem(centralKey, JSON.stringify(data));
+                console.log('Updated centralized storage by name:', productName);
+            } else {
                 console.warn('Product not found in centralized storage:', productName);
-                return;
             }
-
-            // 你在主页面 tooltip 编辑的内容：我们认为它在语义上属于“描述正文”
-            target.productDescription = String(newDescription || '').trim();
-
-            // ✅ 重新构造 ranking_text（保证主页面 AI 一定吃到你编辑后的内容）
-            target.ranking_text = buildRankingFullText(target);
-
-            target.lastModified = new Date().toISOString();
-            localStorage.setItem(centralKey, JSON.stringify(data));
-
-            console.log('Updated centralized storage by name (productDescription + ranking_text):', productName);
         }
-
-
-            // ✅ 统一：基础 ranking 文本 = feature_list_text + product_description
-        function getBaseRankingText(product) {
-            const fl =
-                (product?.feature_list_text || product?.featureList || '').trim(); // 两种字段名都兼容
-            const pd = (product?.product_description || '').trim();
-            return [fl, pd].filter(Boolean).join('\n\n').trim();
-        }
-
-
 
 /*
 //已禁用 - tooltip 不从 storage 同步
@@ -1904,43 +1881,6 @@ Return ONLY the JSON array, no additional text.`;
                 throw error;
             }
         }
-        // =========================
-        // ✅ Ranking input builder
-        // featureList + product_description(edited) + suffix
-        // =========================
-        function buildRankingBaseText(product) {
-        const feature =
-            (product.featureList && String(product.featureList).trim()) ||
-            (product.short_description && String(product.short_description).trim()) ||
-            '';
-
-        const desc =
-            (product.productDescription && String(product.productDescription).trim()) || // 你编辑后保存的
-            (product.product_description && String(product.product_description).trim()) || // JSONL 原始的
-            '';
-
-        // 允许 feature 为空，允许 desc 为空，但拼接时别弄出一堆空行
-        const parts = [];
-        if (feature) parts.push(feature);
-        if (desc) parts.push(desc);
-
-        return parts.join("\n\n").trim();
-        }
-
-        function buildRankingFullText(product) {
-        const base = buildRankingBaseText(product);
-
-        // suffix（只在 hasSuffix=true 且 suffixText 非空时拼）
-        const suffix =
-            (product.hasSuffix === true && product.suffixText && String(product.suffixText).trim())
-            ? String(product.suffixText).trim()
-            : '';
-
-        if (!suffix) return base;
-        if (!base) return suffix;
-        return (base + "\n\n" + suffix).trim();
-        }
-
         // AI Generate function - 主函数
         function generateAIRecommendations() {
             if (currentEditingTooltip) {
@@ -1951,29 +1891,41 @@ Return ONLY the JSON array, no additional text.`;
             console.log('Starting AI generation...');
 
             const centralData = JSON.parse(localStorage.getItem('airfryer_products_data') || '[]');
-
             if (centralData.length === 0) {
                 alert('No products data found! Please reload the page.');
                 return;
             }
 
-            console.log('Loaded', centralData.length, 'products from localStorage');
+            // ✅ Canonical ranking input:
+            // featureList (About this item) + product_description + optional suffixText
+            const buildRankingInput = (product) => {
+                const feature =
+                    (product.featureList && String(product.featureList).trim()) ||
+                    (product.featureListText && String(product.featureListText).trim()) ||
+                    '';
 
-            // ✅ AI 排名输入：永远用 ranking_text（没有就现场用 featureList+desc+suffix 拼）
-            const products = centralData.map(product => {
-                const description =
-                (product.ranking_text && String(product.ranking_text).trim()) ||
-                buildRankingFullText(product) || // fallback 拼一遍
-                '';
+                const desc =
+                    (product.product_description && String(product.product_description).trim()) ||
+                    (product.productDescription && String(product.productDescription).trim()) ||
+                    '';
 
-                return {
-                name: product.name,
-                description,
-                price: product.price || 'N/A',
-                rating: product.rating || 'N/A',
-                url: product.source_url || '#'
-                };
-            });
+                const base = [feature, desc].filter(Boolean).join('\n\n');
+
+                const withSuffix = (product.hasSuffix === true && product.suffixText && String(product.suffixText).trim())
+                    ? (base ? base + '\n\n' + String(product.suffixText).trim() : String(product.suffixText).trim())
+                    : base;
+
+                // Final fallback (only if everything else is empty)
+                return withSuffix || (product.short_description ? String(product.short_description).trim() : '');
+            };
+
+            const products = centralData.map(p => ({
+                name: p.name,
+                description: buildRankingInput(p),
+                price: p.price || 'N/A',
+                rating: p.rating || 'N/A',
+                url: p.source_url || '#'
+            }));
 
             console.log('Total products for API:', products.length);
 
@@ -1989,10 +1941,8 @@ Return ONLY the JSON array, no additional text.`;
                 return;
             }
 
-            // 清空旧 ranking-item（保留标题）
             rankingContainer.querySelectorAll('.ranking-item').forEach(item => item.remove());
 
-            // 获取选择的 API
             const isOpenAI = document.getElementById('apiToggle').checked;
             const provider = isOpenAI ? 'openai' : 'deepseek';
             const providerName = isOpenAI ? 'OpenAI' : 'DeepSeek';
@@ -2001,7 +1951,7 @@ Return ONLY the JSON array, no additional text.`;
             loadingDiv.style.textAlign = 'center';
             loadingDiv.style.padding = '40px';
             loadingDiv.style.color = '#666';
-            loadingDiv.innerHTML = `<p style="font-size: 18px;">🤖 ${providerName} AI is analyzing products...</p><p style="margin-top: 10px;">Generating personalized rankings based on descriptions...</p>`;
+            loadingDiv.innerHTML = `<p style="font-size: 18px;">🤖 ${providerName} AI is analyzing products...</p><p style="margin-top: 10px;">Generating personalized rankings...</p>`;
             rankingContainer.appendChild(loadingDiv);
 
             const button = document.querySelector('.ai-generate-btn');
@@ -2010,42 +1960,38 @@ Return ONLY the JSON array, no additional text.`;
             button.disabled = true;
 
             console.log(`Calling ${providerName} API...`);
-
             const apiCall = isOpenAI ? callOpenAIAPI(products) : callDeepSeekAPI(products);
 
             apiCall
                 .then(rankings => {
-                console.log('API returned rankings:', rankings);
-                loadingDiv.remove();
-                displayRankings(rankings);
+                    console.log('API returned rankings:', rankings);
+                    loadingDiv.remove();
+                    displayRankings(rankings);
+                    localStorage.setItem('lastUsedAPI', provider);
 
-                localStorage.setItem('lastUsedAPI', provider);
-
-                button.textContent = '✓ Generated';
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.disabled = false;
-                }, 2000);
+                    button.textContent = '✓ Generated';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }, 2000);
                 })
                 .catch(error => {
-                console.error('API call failed:', error);
-                loadingDiv.innerHTML = `<p style="color: red;">${providerName} API Error</p><p style="margin-top: 10px;">${error.message}</p><p style="margin-top: 10px;">Using fallback recommendations...</p>`;
+                    console.error('API call failed:', error);
+                    loadingDiv.innerHTML = `<p style="color: red;">${providerName} API Error</p><p style="margin-top: 10px;">${error.message}</p><p style="margin-top: 10px;">Using fallback recommendations...</p>`;
 
-                setTimeout(() => {
-                    loadingDiv.remove();
-                    const fallbackRankings = getFallbackRankings(products);
-                    displayRankings(fallbackRankings);
-                }, 2000);
+                    setTimeout(() => {
+                        loadingDiv.remove();
+                        const fallbackRankings = getFallbackRankings(products);
+                        displayRankings(fallbackRankings);
+                    }, 2000);
 
-                button.textContent = '✗ Failed';
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.disabled = false;
-                }, 2000);
+                    button.textContent = '✗ Failed';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }, 2000);
                 });
             }
-
-
         // Display rankings in the UI
         function displayRankings(rankings) {
             const rankingContainer = document.querySelector('.ranking-container');
@@ -2133,51 +2079,51 @@ Return ONLY the JSON array, no additional text.`;
 
             const data = JSON.parse(localStorage.getItem('airfryer_products_data') || '[]');
 
-            // 你原来的 switch 我保留你的逻辑（最少改动）
+            // Find target product (same as your original switch)
             let targetProduct = null;
             let productName = '';
 
             switch (targetProductKey) {
                 case 'breville':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('breville'));
-                productName = 'Breville Smart Oven';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('breville'));
+                    productName = 'Breville Smart Oven';
+                    break;
                 case 'chefman-6qt':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.includes('6'));
-                productName = 'Chefman 6QT';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.includes('6'));
+                    productName = 'Chefman 6QT';
+                    break;
                 case 'chefman-multi':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.toLowerCase().includes('multifunctional'));
-                productName = 'Chefman Multifunctional';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.toLowerCase().includes('multifunctional'));
+                    productName = 'Chefman Multifunctional';
+                    break;
                 case 'chefman-4qt':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.includes('4'));
-                productName = 'Chefman 4QT';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.includes('4'));
+                    productName = 'Chefman 4QT';
+                    break;
                 case 'seedeem':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('seedeem'));
-                productName = 'SEEDEEM Max XL';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('seedeem'));
+                    productName = 'SEEDEEM Max XL';
+                    break;
                 case 'beelicious':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('beelicious'));
-                productName = 'Beelicious';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('beelicious'));
+                    productName = 'Beelicious';
+                    break;
                 case 'turbofry':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('turbofry'));
-                productName = 'Chefman TurboFry';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('turbofry'));
+                    productName = 'Chefman TurboFry';
+                    break;
                 case 'fullwill':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('fullwill'));
-                productName = 'Fullwill Vision Pro';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('fullwill'));
+                    productName = 'Fullwill Vision Pro';
+                    break;
                 case 'gourmia':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('gourmia'));
-                productName = 'Gourmia';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('gourmia'));
+                    productName = 'Gourmia';
+                    break;
                 case 'ninja':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('ninja'));
-                productName = 'Ninja Crispi';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('ninja'));
+                    productName = 'Ninja Crispi';
+                    break;
             }
 
             if (!targetProduct) {
@@ -2192,17 +2138,11 @@ Return ONLY the JSON array, no additional text.`;
                 return;
             }
 
-            // ✅ 保存 suffix 标记
+            // ✅ Don't overwrite ranking_text anymore.
+            // We only store the suffixText + hasSuffix, and generateAIRecommendations() will build:
+            // featureList + product_description + suffixText
             targetProduct.hasSuffix = true;
             targetProduct.suffixText = suffixText.trim();
-
-            // ✅ 重要：第一次加 suffix 时，把“未加 suffix 的完整 base”存下来
-            if (!targetProduct.originalRankingText) {
-                targetProduct.originalRankingText = buildRankingBaseText(targetProduct);
-            }
-
-            // ✅ 重新构造 ranking_text（featureList + desc + suffix）
-            targetProduct.ranking_text = buildRankingFullText(targetProduct);
 
             localStorage.setItem('airfryer_products_data', JSON.stringify(data));
 
@@ -2210,10 +2150,7 @@ Return ONLY the JSON array, no additional text.`;
             statusEl.style.color = '#28a745';
 
             console.log(`Suffix applied to ${productName}`);
-            console.log('Original base length:', targetProduct.originalRankingText?.length || 0);
-            console.log('New ranking_text length:', targetProduct.ranking_text?.length || 0);
         }
-
         
         // ⭐ 调试函数：查看当前产品的描述
         function debugShowDescription() {
@@ -2274,8 +2211,11 @@ Return ONLY the JSON array, no additional text.`;
             console.log('='.repeat(80));
             console.log(`Product: ${productName}`);
             console.log(`Has Suffix: ${targetProduct.hasSuffix || false}`);
+            console.log(`Description Length: ${targetProduct.description?.length || 0}`);
+            console.log(`Original Length: ${targetProduct.originalDescription?.length || 0}`);
             console.log('-'.repeat(80));
             console.log('Current Description:');
+            console.log(targetProduct.description);
             console.log('='.repeat(80));
             
             alert(`Check the Console (F12) to see ${productName}'s description!`);
@@ -2292,45 +2232,45 @@ Return ONLY the JSON array, no additional text.`;
 
             switch (targetProductKey) {
                 case 'breville':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('breville'));
-                productName = 'Breville Smart Oven';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('breville'));
+                    productName = 'Breville Smart Oven';
+                    break;
                 case 'chefman-6qt':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.includes('6'));
-                productName = 'Chefman 6QT';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.includes('6'));
+                    productName = 'Chefman 6QT';
+                    break;
                 case 'chefman-multi':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.toLowerCase().includes('multifunctional'));
-                productName = 'Chefman Multifunctional';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.toLowerCase().includes('multifunctional'));
+                    productName = 'Chefman Multifunctional';
+                    break;
                 case 'chefman-4qt':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.includes('4'));
-                productName = 'Chefman 4QT';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('chefman') && p.name.includes('4'));
+                    productName = 'Chefman 4QT';
+                    break;
                 case 'seedeem':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('seedeem'));
-                productName = 'SEEDEEM Max XL';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('seedeem'));
+                    productName = 'SEEDEEM Max XL';
+                    break;
                 case 'beelicious':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('beelicious'));
-                productName = 'Beelicious';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('beelicious'));
+                    productName = 'Beelicious';
+                    break;
                 case 'turbofry':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('turbofry'));
-                productName = 'Chefman TurboFry';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('turbofry'));
+                    productName = 'Chefman TurboFry';
+                    break;
                 case 'fullwill':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('fullwill'));
-                productName = 'Fullwill Vision Pro';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('fullwill'));
+                    productName = 'Fullwill Vision Pro';
+                    break;
                 case 'gourmia':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('gourmia'));
-                productName = 'Gourmia';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('gourmia'));
+                    productName = 'Gourmia';
+                    break;
                 case 'ninja':
-                targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('ninja'));
-                productName = 'Ninja Crispi';
-                break;
+                    targetProduct = data.find(p => p.name && p.name.toLowerCase().includes('ninja'));
+                    productName = 'Ninja Crispi';
+                    break;
             }
 
             if (!targetProduct) {
@@ -2345,28 +2285,16 @@ Return ONLY the JSON array, no additional text.`;
                 return;
             }
 
-            // ✅ 移除 suffix 标记
             targetProduct.hasSuffix = false;
             targetProduct.suffixText = '';
 
-            // ✅ 恢复 ranking_text：优先 originalRankingText（第一次加 suffix 时存的 base）
-            if (targetProduct.originalRankingText && String(targetProduct.originalRankingText).trim()) {
-                targetProduct.ranking_text = String(targetProduct.originalRankingText).trim();
-            } else {
-                // 没存过 originalRankingText：现场用 base 重建
-                targetProduct.ranking_text = buildRankingBaseText(targetProduct);
-            }
-
             localStorage.setItem('airfryer_products_data', JSON.stringify(data));
 
-            statusEl.textContent = `Suffix removed from ${productName}. Ranking input restored.`;
+            statusEl.textContent = `Suffix removed from ${productName}.`;
             statusEl.style.color = '#dc3545';
 
             console.log(`Suffix removed from ${productName}`);
-            console.log('Restored ranking_text length:', targetProduct.ranking_text?.length || 0);
         }
-
-
     </script>
 </body>
 </html>
