@@ -732,7 +732,27 @@
                     lastModified: new Date().toISOString()
                 });
             }
-            
+            // ✅ 同步构建 ranking_text：featureList + (productDescription or product_description) + suffix
+            const feature =
+                (product.featureList && String(product.featureList).trim()) ||
+                (product.short_description && String(product.short_description).trim()) ||
+                '';
+
+            const desc =
+                (product.productDescription && String(product.productDescription).trim()) ||
+                (product.product_description && String(product.product_description).trim()) ||
+                '';
+
+            const baseParts = [];
+            if (feature) baseParts.push(feature);
+            if (desc) baseParts.push(desc);
+            let base = baseParts.join("\n\n").trim();
+
+            if (product.hasSuffix === true && product.suffixText && String(product.suffixText).trim()) {
+                base = base ? (base + "\n\n" + String(product.suffixText).trim()) : String(product.suffixText).trim();
+            }
+
+            product.ranking_text = base;
             localStorage.setItem(centralKey, JSON.stringify(data));
             console.log('Saved to centralized storage, product:', productId);
         }
