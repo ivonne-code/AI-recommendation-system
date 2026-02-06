@@ -241,6 +241,7 @@
         .buy-now-btn:hover {
             background: #D35400;
         }
+
         .description-section {
             max-width: 1500px;
             margin: 30px auto;
@@ -251,6 +252,7 @@
             line-height: 1.8;
             color: #0F1111;
         }
+        /* Edit functionality styles */
         /* Edit functionality styles */
         .editable-section {
             position: relative;
@@ -373,16 +375,6 @@
         }
     </style>
 </head>
-<!-- Edit Modal -->
-<div class="edit-overlay" id="editOverlay"></div>
-<div class="edit-modal" id="editModal">
-    <div class="edit-modal-header">Edit Description</div>
-    <textarea class="edit-modal-textarea" id="editTextarea"></textarea>
-    <div class="edit-modal-buttons">
-        <button class="edit-modal-btn edit-modal-cancel" onclick="cancelEdit()">Cancel</button>
-        <button class="edit-modal-btn edit-modal-save" onclick="saveEdit()">Save</button>
-    </div>
-</div>
 <body>
     <div class="header">
         <div class="header-content">
@@ -410,9 +402,9 @@
             <h1 class="product-title">CHEFMAN Multifunctional Digital Air Fryer+ Rotisserie, Dehydrator, Convection Oven, 17 Touch Screen Presets Fry, Roast, Dehydrate, Bake, XL 10L Family Size, Auto Shutoff, Large Easy-View Window, Black</h1>
             
             <div class="rating-section">
-                <span class="stars">★★★★☆</span>
-                <span class="rating-count">4.3 out of 5 stars</span>
-                <a href="#" class="rating-count">44,968 ratings</a>
+                <span class="stars">★★★★</span>
+                <span class="rating-count">4.6 out of 5 stars</span>
+                <a href="#" class="rating-count">1,243 ratings</a>
             </div>
 
             <div class="price-section">
@@ -421,22 +413,12 @@
 
             <div class="product-details">
                 <h2 class="section-title">About this item</h2>
-                <ul class="feature-list editable-section" id="featureList">
+                <div class="editable-section" id="featureList">
                     <span class="edit-indicator">✏️ Click to Edit</span>
-                    <li><strong>Versatile countertop cooking:</strong> Air fry, bake, dehydrate, rotisserie, or roast to crispy perfection in one convenient appliance.</li>
-                    
-                    <li><strong>Cook faster:</strong> No need to preheat like traditional ovens. This all-in-one convection oven uses rapid air heating elements to cook fast, even, and crispy food.</li>
-                    
-                    <li><strong>Healthy cooking made easy:</strong> Make healthy meals using 98% less oil than traditional fryers.</li>
-                    
-                    <li><strong>Simplified set-up:</strong> Anyone can cook perfect meals in minutes with 17 preset options and an easy-to-use capacitive touch control screen.</li>
-                    
-                    <li><strong>All-inclusive:</strong> Includes three air flow racks, stainless steel rotisserie oven spit with retrieval tool, and a drip tray.</li>
-                    
-                    <li><strong>Family-size meals:</strong> Make meals for the family with the extra-large 10-Liter capacity. Also great for meal-prepping large quantities of food.</li>
-                    
-                    <li><strong>Monitor cooking progress:</strong> The interior lights and extra-large air fryer oven window allow you to check your food's cooking progress.</li>
-                </ul>
+                    <ul class="feature-list">
+                        <!-- Content will be loaded from JSONL -->
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -475,21 +457,18 @@
         <h2 class="section-title">Product Description</h2>
         <div class="description-text editable-section" id="productDescription">
             <span class="edit-indicator">✏️ Click to Edit</span>
-            <p style="margin-bottom: 15px;">
-                <strong>Versatile countertop cooking:</strong> Air fry, bake, dehydrate, rotisserie, or roast to crispy perfection in one convenient appliance. This multifunctional digital air fryer combines the functionality of multiple kitchen appliances in one compact unit.
-            </p>
-            <p style="margin-bottom: 15px;">
-                <strong>Cook faster:</strong> No need to preheat like traditional ovens. This all-in-one convection oven uses rapid air heating elements to cook fast, even, and crispy food. Save time and energy with quick cooking technology.
-            </p>
-            <p style="margin-bottom: 15px;">
-                <strong>Healthy cooking made easy:</strong> Make healthy meals using 98% less oil than traditional fryers. Enjoy your favorite fried foods with significantly less fat while maintaining great taste and texture.
-            </p>
-            <p style="margin-bottom: 15px;">
-                <strong>Simplified set-up:</strong> Anyone can cook perfect meals in minutes with 17 preset options and an easy-to-use capacitive touch control screen. The intuitive interface makes cooking accessible for everyone.
-            </p>
-            <p>
-                <strong>Family-size meals:</strong> Make meals for the family with the extra-large 10-Liter capacity. Also great for meal-prepping large quantities of food. The interior lights and extra-large air fryer oven window allow you to check your food's cooking progress without opening the door.
-            </p>
+            <!-- Content will be loaded from JSONL -->
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="edit-overlay" id="editOverlay"></div>
+    <div class="edit-modal" id="editModal">
+        <div class="edit-modal-header">Edit Description</div>
+        <textarea class="edit-modal-textarea" id="editTextarea"></textarea>
+        <div class="edit-modal-buttons">
+            <button class="edit-modal-btn edit-modal-cancel" onclick="cancelEdit()">Cancel</button>
+            <button class="edit-modal-btn edit-modal-save" onclick="saveEdit()">Save</button>
         </div>
     </div>
 
@@ -503,13 +482,24 @@
 
         // Initialize editable sections
         document.addEventListener('DOMContentLoaded', function() {
-            const editableSections = document.querySelectorAll('.editable-section');
+            console.log('🎯 DOMContentLoaded fired');
             
-            editableSections.forEach(section => {
+            const editableSections = document.querySelectorAll('.editable-section');
+            console.log('📝 Found', editableSections.length, 'editable sections');
+            
+            editableSections.forEach((section, index) => {
+                console.log(`   Section ${index}:`, section.id, section.className);
+                
                 section.addEventListener('click', function(e) {
-                    // Don't trigger if clicking on a link
-                    if (e.target.tagName === 'A') return;
+                    console.log('🖱️ Clicked section:', this.id);
                     
+                    // Don't trigger if clicking on a link
+                    if (e.target.tagName === 'A') {
+                        console.log('   Ignored: clicked on link');
+                        return;
+                    }
+                    
+                    console.log('   Opening edit modal...');
                     openEditModal(this);
                 });
             });
@@ -521,15 +511,19 @@
                 }
             });
 
+            console.log('📥 Loading from localStorage...');
             // Load saved content
             loadFromLocalStorage();
         });
 
         function openEditModal(element) {
+            console.log('📝 openEditModal called for:', element.id);
             currentEditingElement = element;
             
             // Get current content (remove edit indicator)
             const editIndicator = element.querySelector('.edit-indicator');
+            console.log('   Edit indicator found:', !!editIndicator);
+            
             let content = element.innerHTML;
             if (editIndicator) {
                 content = content.replace(editIndicator.outerHTML, '');
@@ -543,10 +537,12 @@
             if (element.id === 'featureList') {
                 // For feature list, extract each <li> with HTML preserved
                 const items = element.querySelectorAll('li');
+                console.log('   Found', items.length, 'list items');
                 textForEditing = Array.from(items).map(li => li.innerHTML.trim()).join('\n---\n');
             } else {
                 // For description, extract each <p> with HTML preserved
                 const paragraphs = element.querySelectorAll('p');
+                console.log('   Found', paragraphs.length, 'paragraphs');
                 if (paragraphs.length > 0) {
                     textForEditing = Array.from(paragraphs).map(p => p.innerHTML.trim()).join('\n\n');
                 } else {
@@ -555,6 +551,7 @@
                 }
             }
             
+            console.log('   Text length:', textForEditing.length);
                       
             // Set textarea value
             document.getElementById('editTextarea').value = textForEditing;
@@ -562,6 +559,7 @@
             // Show modal and overlay
             document.getElementById('editOverlay').classList.add('active');
             document.getElementById('editModal').classList.add('active');
+            console.log('   ✅ Modal opened');
             
             // Focus textarea
             setTimeout(() => {
@@ -642,7 +640,34 @@
         // Get product ID from current page URL
         function getCurrentProductId() {
             const url = window.location.pathname;
-            return url.split('/').pop().replace('.html', '');
+            const filename = url.split('/').pop().replace('.html', '');
+            
+            // Map filename to product data in localStorage
+            // Check localStorage to find matching product
+            const centralKey = 'airfryer_products_data';
+            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            
+            // Try to match by product name or index
+            const productMap = {
+                'product-detail-breville': 0,  // 1st product in JSONL
+                'product-chefman-6qt': 1,      // 2nd product in JSONL
+                'product-chefman-multi': 2,    // 3rd product in JSONL
+                'product-chefman-4qt': 3,      // 4th product in JSONL
+                'product-seedeem': 4,          // 5th product in JSONL
+                'product-beelicious': 5,       // 6th product in JSONL
+                'product-turbofry': 6,         // 7th product in JSONL
+                'product-fullwill': 7,         // 8th product in JSONL
+                'product-ninja': 8,            // 9th product in JSONL
+                'product-gourmia': 9           // 10th product in JSONL
+            };
+            
+            // If we have a mapping, use it to get the actual product ID
+            if (productMap[filename] !== undefined && data[productMap[filename]]) {
+                return data[productMap[filename]].id;
+            }
+            
+            // Fallback: return filename as-is
+            return filename;
         }
 
         // Save to centralized storage
@@ -704,62 +729,217 @@
             console.log('Saved to centralized storage, product:', productId);
         }
 
+        function splitShortDescToBullets(shortDescRaw) {
+            let s = String(shortDescRaw || '').replace(/\r\n/g, '\n').trim();
+            if (!s) return [];
+
+            // 把 --- 当作编辑分隔符：合并掉
+            s = s.replace(/\n?\s*---\s*\n?/g, '\n');
+
+            // 先看“按行分割”是否像真实 bullet（每行都不太长、且有多行）
+            const lines = s.split('\n').map(x => x.trim()).filter(Boolean);
+
+            // 判定：如果有 >=3 行 且 大部分行长度较短（比如 <=120），才认为这是“真实 bullet 换行”
+            if (lines.length >= 3) {
+                const shortCnt = lines.filter(x => x.length <= 120).length;
+                if (shortCnt / lines.length >= 0.7) {
+                return lines;
+                }
+            }
+
+            // 否则：这些换行很可能是“折行/自动换行”，我们把它们合并回一段
+            s = s
+                .replace(/-\s*\n\s*/g, '')     // 断词：easy-t\n o-use => easy-to-use
+                .replace(/\n+/g, ' ')          // 其它换行全部变空格
+                .replace(/\s{2,}/g, ' ')
+                .trim();
+
+            // 用 “Title: ” 作为 bullet 切分（你说你要“大写到: 为标题”，这里也能吃）
+            const titleRegex = /([A-Za-z][A-Za-z0-9°&'’\-\s]{2,50}:\s)/g;
+            const parts = s.split(titleRegex);
+
+            const chunks = [];
+            const lead = (parts[0] || '').trim();
+            if (lead) chunks.push({ title: null, body: lead });
+
+            for (let i = 1; i < parts.length; i += 2) {
+                chunks.push({ title: (parts[i] || '').trim(), body: (parts[i + 1] || '').trim() });
+            }
+
+            // 把没有 title 的碎片拼回上一条
+            const merged = [];
+            for (const c of chunks) {
+                if (!c.title) {
+                if (merged.length) merged[merged.length - 1].body = (merged[merged.length - 1].body + ' ' + c.body).trim();
+                else merged.push({ title: '', body: c.body });
+                } else merged.push(c);
+            }
+
+            const bullets = merged
+                .map(x => `${x.title ? x.title : ''}${x.title ? '' : ''}${x.body || ''}`.trim())
+                .filter(Boolean);
+
+            // 兜底：如果标题切不出来，就按句号切
+            if (bullets.length <= 1) {
+                return s
+                .split(/(?<=\.)\s+(?=[A-Z])/)
+                .map(x => x.trim())
+                .filter(Boolean)
+                .slice(0, 10);
+            }
+
+            return bullets;
+        }
+
+
+
+
+
         // Load from centralized storage
         function loadFromLocalStorage() {
             const productId = getCurrentProductId();
             const centralKey = 'airfryer_products_data';
-            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
-            
-            const product = data.find(p => p.id === productId);
-            
-            if (product) {
-                // Load feature list if available
-                if (product.featureList && document.getElementById('featureList')) {
-                    const featureList = document.getElementById('featureList');
-                    const editIndicator = featureList.querySelector('.edit-indicator');
-                    
-                    featureList.innerHTML = '';
-                    if (editIndicator) {
-                        featureList.appendChild(editIndicator.cloneNode(true));
-                    }
-                    
-                    const ul = document.createElement('ul');
-                    ul.className = 'feature-list';
-                    
-                    const lines = product.featureList.split('\n').filter(line => line.trim());
-                    lines.forEach(line => {
-                        const li = document.createElement('li');
-                        li.innerHTML = line.trim();
-                        ul.appendChild(li);
-                    });
-                    
-                    featureList.appendChild(ul);
-                }
-                
-                // Load product description if available
-                const descElement = document.getElementById('productDescription') || 
-                                document.querySelector('.description-text');
-                
-                if (product.productDescription && descElement) {
-                    const editIndicator = descElement.querySelector('.edit-indicator');
-                    
-                    descElement.innerHTML = '';
-                    if (editIndicator) {
-                        descElement.appendChild(editIndicator.cloneNode(true));
-                    }
-                    
-                    const paragraphs = product.productDescription.split('\n\n').filter(p => p.trim());
-                    paragraphs.forEach(para => {
-                        const p = document.createElement('p');
-                        p.style.marginBottom = '15px';
-                        p.innerHTML = para.trim().replace(/\n/g, '<br>');
-                        descElement.appendChild(p);
-                    });
-                }
-                
-                console.log('Loaded from centralized storage for product:', productId);
+
+            console.log('🔍 Loading from localStorage...');
+            console.log('   Product ID:', productId);
+
+            const rawData = localStorage.getItem(centralKey);
+            console.log('   Raw localStorage:', rawData ? rawData.substring(0, 100) + '...' : 'null');
+
+            let data = [];
+            try {
+                data = JSON.parse(rawData || '[]');
+            } catch (e) {
+                console.error('❌ Failed to parse localStorage JSON:', e);
+                data = [];
             }
+
+            console.log('   Found', data.length, 'products in storage');
+            console.log('   Product IDs:', data.map(p => p.id));
+
+            const product = data.find(p => p.id === productId);
+
+            // helper: prevent HTML injection
+            function escapeHTML(str) {
+                return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+            }
+
+            if (!product) {
+                console.log('❌ Product not found in localStorage:', productId);
+                console.log('   Available products:', data.map(p => p.id).join(', '));
+                console.log('   📌 Using default HTML content');
+                return;
+            }
+
+            console.log('📦 Loading product from storage:', productId);
+            console.log('   short_description:', !!product.short_description);
+            console.log('   product_description:', !!product.product_description);
+            console.log('   productDescription(edited):', !!product.productDescription);
+            console.log('   description(central):', !!product.description);
+            console.log('   Has suffix?', product.hasSuffix || false);
+
+            // =========================
+            // 1) About this item (features)
+            // =========================
+            const featureListEl = document.getElementById('featureList');
+            if (featureListEl) {
+            const existingUl = featureListEl.querySelector('ul');
+            if (existingUl) existingUl.remove();
+
+            const ul = document.createElement('ul');
+            ul.className = 'feature-list';
+
+            // 🔑 关键就在这里
+            const rawFeature =
+                (product.featureList && product.featureList.trim()) ||
+                (product.short_description && product.short_description.trim()) ||
+                '';
+
+            const bullets = splitShortDescToBullets(rawFeature);
+
+            if (bullets.length > 0) {
+                bullets.forEach(b => {
+                const li = document.createElement('li');
+                li.innerHTML = escapeHTML(b).replace(/\n/g, '<br>');
+                ul.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.style.color = '#666';
+                li.style.fontStyle = 'italic';
+                li.textContent = 'No features available.';
+                ul.appendChild(li);
+            }
+
+            featureListEl.appendChild(ul);
+            }
+
+        // =========================
+        // 2) Product Description (ONLY product_description + edited + suffix)
+        const descElement = document.getElementById('productDescription');
+        if (descElement) {
+        // 清掉旧内容（保留 edit indicator）
+        descElement.querySelectorAll('p, .suffix-content').forEach(n => n.remove());
+
+        // ✅ 只允许这两个来源：JSONL 的 product_description 或你编辑后保存的 productDescription
+        const rawDescription =
+            (product.product_description && String(product.product_description).trim()) ||
+            (product.productDescription && String(product.productDescription).trim()) ||
+            '';
+
+        if (rawDescription) {
+            const paras = rawDescription
+            .replace(/\r\n/g, '\n')
+            .split(/\n{2,}/)
+            .map(s => s.trim())
+            .filter(Boolean);
+
+            (paras.length ? paras : [rawDescription]).forEach(para => {
+            const p = document.createElement('p');
+            p.style.marginBottom = '15px';
+            p.innerHTML = escapeHTML(para).replace(/\n/g, '<br>');
+            descElement.appendChild(p);
+            });
+        } else {
+            const placeholder = document.createElement('p');
+            placeholder.style.color = '#666';
+            placeholder.style.fontStyle = 'italic';
+            placeholder.textContent = 'No product description available.';
+            descElement.appendChild(placeholder);
         }
+
+        // suffix（有就加一次）
+        if (product.hasSuffix && product.suffixText) {
+            const suffixDiv = document.createElement('div');
+            suffixDiv.className = 'suffix-content';
+            suffixDiv.style.marginTop = '30px';
+            suffixDiv.style.paddingTop = '20px';
+            suffixDiv.style.borderTop = '2px solid #e7e7e7';
+
+            String(product.suffixText)
+            .replace(/\r\n/g, '\n')
+            .split(/\n{2,}/)
+            .map(s => s.trim())
+            .filter(Boolean)
+            .forEach(para => {
+                const p = document.createElement('p');
+                p.style.marginBottom = '15px';
+                p.innerHTML = escapeHTML(para).replace(/\n/g, '<br>');
+                suffixDiv.appendChild(p);
+            });
+
+            descElement.appendChild(suffixDiv);
+        }
+    }
+
+        console.log('✅ Loaded from storage successfully');
+        }
+
     </script>
 </body>
 </html>

@@ -173,6 +173,86 @@
             margin-right: 8px;
         }
 
+        .buy-box {
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f7f7f7;
+        }
+
+        .buy-price {
+            font-size: 28px;
+            color: #B12704;
+            margin-bottom: 10px;
+        }
+
+        .delivery-info {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .stock-info {
+            color: #007600;
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        .quantity-selector {
+            margin: 15px 0;
+        }
+
+        .quantity-selector select {
+            padding: 8px;
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .add-to-cart-btn {
+            background: #3498DB;
+            border: 1px solid #2980B9;
+            color: white;
+            width: 100%;
+            padding: 15px 20px; 
+            font-size: 16px;
+            font-weight: 600; 
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+
+        .add-to-cart-btn:hover {
+            background: #2980B9;
+        }
+
+        .buy-now-btn {
+            background: #E67E22;
+            border: 1px solid #D35400;
+            color: white;
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .buy-now-btn:hover {
+            background: #D35400;
+        }
+
+        .description-section {
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .description-text {
+            line-height: 1.8;
+            color: #0F1111;
+        }
+        /* Edit functionality styles */
         /* Edit functionality styles */
         .editable-section {
             position: relative;
@@ -293,98 +373,8 @@
         .edit-modal-cancel:hover {
             background-color: #F7FAFA;
         }
-
-        .buy-box {
-            border: 1px solid #D5D9D9;
-            border-radius: 8px;
-            padding: 20px;
-            background: #f7f7f7;
-        }
-
-        .buy-price {
-            font-size: 28px;
-            color: #B12704;
-            margin-bottom: 10px;
-        }
-
-        .delivery-info {
-            margin: 15px 0;
-            font-size: 14px;
-        }
-
-        .stock-info {
-            color: #007600;
-            font-size: 18px;
-            margin: 15px 0;
-        }
-
-        .quantity-selector {
-            margin: 15px 0;
-        }
-
-        .quantity-selector select {
-            padding: 8px;
-            border: 1px solid #D5D9D9;
-            border-radius: 8px;
-            background: white;
-        }
-
-        .add-to-cart-btn {
-            background: #3498DB;
-            border: 1px solid #2980B9;
-            color: white;
-            width: 100%;
-            padding: 15px 20px; 
-            font-size: 16px;
-            font-weight: 600; 
-            border-radius: 8px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-
-        .add-to-cart-btn:hover {
-            background: #2980B9;
-        }
-
-        .buy-now-btn {
-            background: #E67E22;
-            border: 1px solid #D35400;
-            color: white;
-            width: 100%;
-            padding: 15px 20px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .buy-now-btn:hover {
-            background: #D35400;
-        }
-
-        .description-section {
-            max-width: 1500px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .description-text {
-            line-height: 1.8;
-            color: #0F1111;
-        }
     </style>
 </head>
-<!-- Edit Modal -->
-<div class="edit-overlay" id="editOverlay"></div>
-<div class="edit-modal" id="editModal">
-    <div class="edit-modal-header">Edit Description</div>
-    <textarea class="edit-modal-textarea" id="editTextarea"></textarea>
-    <div class="edit-modal-buttons">
-        <button class="edit-modal-btn edit-modal-cancel" onclick="cancelEdit()">Cancel</button>
-        <button class="edit-modal-btn edit-modal-save" onclick="saveEdit()">Save</button>
-    </div>
-</div>
 <body>
     <div class="header">
         <div class="header-content">
@@ -412,9 +402,9 @@
             <h1 class="product-title">Chefman Air Fryer – 6 QT Compact Airfryer for Quick & Easy Meals in Minutes, Features Hi-Fry Technology for Extra Crisp, Touchscreen Controls with 4 Presets, Nonstick & Dishwasher Safe Basket - Black</h1>
             
             <div class="rating-section">
-                <span class="stars">★★★★★</span>
-                <span class="rating-count">4.7 out of 5 stars</span>
-                <a href="#" class="rating-count">682 ratings</a>
+                <span class="stars">★★★★</span>
+                <span class="rating-count">4.6 out of 5 stars</span>
+                <a href="#" class="rating-count">1,243 ratings</a>
             </div>
 
             <div class="price-section">
@@ -425,23 +415,8 @@
                 <h2 class="section-title">About this item</h2>
                 <div class="editable-section" id="featureList">
                     <span class="edit-indicator">✏️ Click to Edit</span>
-                    <ul class="feature-list editable-section" id="featureList">
-                    <span class="edit-indicator">✏️ Click to Edit</span>
-                        <li><strong>FAST AND EASY:</strong> This compact air fryer handles any culinary challenge. Customize cooking time and temperature with the digital touch screen display or use one of four preset functions for quick, one-touch meals. Perfect for serving 3-5 people.</li>
-                        
-                        <li><strong>450°F HI-FRY TECHNOLOGY:</strong> Achieve the perfect finishing crunch on your air-fried favorites. Increase the heat to 450°F during the final two minutes of cooking: perfect for extra crispy chicken tenders and French fries.</li>
-                        
-                        <li><strong>STYLISH AND COMPACT:</strong> The sleek, narrow design of this air fryers maximizes its 6-quart capacity while minimizing its countertop footprint. Its compact size makes it a great space saver, fitting perfectly on your counter or in your cabinets.</li>
-                        
-                        <li><strong>HEALTHY COOKING:</strong> Enjoy delicious meals with little-to-no oil. This Chefman large air fryer lets you cook healthier, low-fat meals that still taste amazing.</li>
-                        
-                        <li><strong>LED SHAKE NOTIFICATIONS:</strong> Get notified with an audible alarm halfway through cooking, reminding you to shake your food for the crispiest results possible.</li>
-                        
-                        <li><strong>SIMPLE CLEAN-UP:</strong> The 6-quart nonstick basket and rack are both dishwasher safe, making clean-up quick and easy. The stylish matte-black finish is timeless and easy to wipe clean with a damp cloth.</li>
-                        
-                        <li><strong>SAFETY FIRST:</strong> With automatic shutoff technology, this air fryer ensures added safety by turning off when cooking is finished or when the basket is removed.</li>
-                        
-                        <li><strong>TRUSTED QUALITY:</strong> This air fryer is cETL approved with advanced safety technology for long-lasting durability and comes with a 1-year assurance provided by Chefman. 1700W/120V – RJ38-6T-BLACK</li>
+                    <ul class="feature-list">
+                        <!-- Content will be loaded from JSONL -->
                     </ul>
                 </div>
             </div>
@@ -482,18 +457,18 @@
         <h2 class="section-title">Product Description</h2>
         <div class="description-text editable-section" id="productDescription">
             <span class="edit-indicator">✏️ Click to Edit</span>
-            <p style="margin-bottom: 15px;">
-                This compact air fryer handles any culinary challenge. Customize cooking time and temperature with the digital touch screen display or use one of four preset functions for quick, one-touch meals. Perfect for serving 3-5 people.
-            </p>
-            <p style="margin-bottom: 15px;">
-                <strong>450°F HI-FRY TECHNOLOGY:</strong> Achieve the perfect finishing crunch on your air-fried favorites. Increase the heat to 450°F during the final two minutes of cooking: perfect for extra crispy chicken tenders and French fries.
-            </p>
-            <p style="margin-bottom: 15px;">
-                <strong>HEALTHY COOKING:</strong> Enjoy delicious meals with little-to-no oil. This Chefman large air fryer lets you cook healthier, low-fat meals that still taste amazing.
-            </p>
-            <p>
-                <strong>SAFETY FIRST:</strong> With automatic shutoff technology, this air fryer ensures added safety by turning off when cooking is finished or when the basket is removed. This air fryer is cETL approved with advanced safety technology for long-lasting durability.
-            </p>
+            <!-- Content will be loaded from JSONL -->
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="edit-overlay" id="editOverlay"></div>
+    <div class="edit-modal" id="editModal">
+        <div class="edit-modal-header">Edit Description</div>
+        <textarea class="edit-modal-textarea" id="editTextarea"></textarea>
+        <div class="edit-modal-buttons">
+            <button class="edit-modal-btn edit-modal-cancel" onclick="cancelEdit()">Cancel</button>
+            <button class="edit-modal-btn edit-modal-save" onclick="saveEdit()">Save</button>
         </div>
     </div>
 
@@ -507,13 +482,24 @@
 
         // Initialize editable sections
         document.addEventListener('DOMContentLoaded', function() {
-            const editableSections = document.querySelectorAll('.editable-section');
+            console.log('🎯 DOMContentLoaded fired');
             
-            editableSections.forEach(section => {
+            const editableSections = document.querySelectorAll('.editable-section');
+            console.log('📝 Found', editableSections.length, 'editable sections');
+            
+            editableSections.forEach((section, index) => {
+                console.log(`   Section ${index}:`, section.id, section.className);
+                
                 section.addEventListener('click', function(e) {
-                    // Don't trigger if clicking on a link
-                    if (e.target.tagName === 'A') return;
+                    console.log('🖱️ Clicked section:', this.id);
                     
+                    // Don't trigger if clicking on a link
+                    if (e.target.tagName === 'A') {
+                        console.log('   Ignored: clicked on link');
+                        return;
+                    }
+                    
+                    console.log('   Opening edit modal...');
                     openEditModal(this);
                 });
             });
@@ -525,15 +511,19 @@
                 }
             });
 
+            console.log('📥 Loading from localStorage...');
             // Load saved content
             loadFromLocalStorage();
         });
 
         function openEditModal(element) {
+            console.log('📝 openEditModal called for:', element.id);
             currentEditingElement = element;
             
             // Get current content (remove edit indicator)
             const editIndicator = element.querySelector('.edit-indicator');
+            console.log('   Edit indicator found:', !!editIndicator);
+            
             let content = element.innerHTML;
             if (editIndicator) {
                 content = content.replace(editIndicator.outerHTML, '');
@@ -547,10 +537,12 @@
             if (element.id === 'featureList') {
                 // For feature list, extract each <li> with HTML preserved
                 const items = element.querySelectorAll('li');
+                console.log('   Found', items.length, 'list items');
                 textForEditing = Array.from(items).map(li => li.innerHTML.trim()).join('\n---\n');
             } else {
                 // For description, extract each <p> with HTML preserved
                 const paragraphs = element.querySelectorAll('p');
+                console.log('   Found', paragraphs.length, 'paragraphs');
                 if (paragraphs.length > 0) {
                     textForEditing = Array.from(paragraphs).map(p => p.innerHTML.trim()).join('\n\n');
                 } else {
@@ -559,6 +551,7 @@
                 }
             }
             
+            console.log('   Text length:', textForEditing.length);
                       
             // Set textarea value
             document.getElementById('editTextarea').value = textForEditing;
@@ -566,6 +559,7 @@
             // Show modal and overlay
             document.getElementById('editOverlay').classList.add('active');
             document.getElementById('editModal').classList.add('active');
+            console.log('   ✅ Modal opened');
             
             // Focus textarea
             setTimeout(() => {
@@ -646,7 +640,34 @@
         // Get product ID from current page URL
         function getCurrentProductId() {
             const url = window.location.pathname;
-            return url.split('/').pop().replace('.html', '');
+            const filename = url.split('/').pop().replace('.html', '');
+            
+            // Map filename to product data in localStorage
+            // Check localStorage to find matching product
+            const centralKey = 'airfryer_products_data';
+            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            
+            // Try to match by product name or index
+            const productMap = {
+                'product-detail-breville': 0,  // 1st product in JSONL
+                'product-chefman-6qt': 1,      // 2nd product in JSONL
+                'product-chefman-multi': 2,    // 3rd product in JSONL
+                'product-chefman-4qt': 3,      // 4th product in JSONL
+                'product-seedeem': 4,          // 5th product in JSONL
+                'product-beelicious': 5,       // 6th product in JSONL
+                'product-turbofry': 6,         // 7th product in JSONL
+                'product-fullwill': 7,         // 8th product in JSONL
+                'product-ninja': 8,            // 9th product in JSONL
+                'product-gourmia': 9           // 10th product in JSONL
+            };
+            
+            // If we have a mapping, use it to get the actual product ID
+            if (productMap[filename] !== undefined && data[productMap[filename]]) {
+                return data[productMap[filename]].id;
+            }
+            
+            // Fallback: return filename as-is
+            return filename;
         }
 
         // Save to centralized storage
@@ -712,25 +733,56 @@
         function loadFromLocalStorage() {
             const productId = getCurrentProductId();
             const centralKey = 'airfryer_products_data';
-            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            
+            console.log('🔍 Loading from localStorage...');
+            console.log('   Product ID:', productId);
+            
+            const rawData = localStorage.getItem(centralKey);
+            console.log('   Raw localStorage:', rawData ? rawData.substring(0, 100) + '...' : 'null');
+            
+            const data = JSON.parse(rawData || '[]');
+            console.log('   Found', data.length, 'products in storage');
+            console.log('   Product IDs:', data.map(p => p.id));
             
             const product = data.find(p => p.id === productId);
             
             if (product) {
-                // Load feature list if available
-                if (product.featureList && document.getElementById('featureList')) {
+                console.log('📦 Loading product from JSONL:', productId);
+                console.log('   short_description:', !!product.short_description);
+                console.log('   product_description:', !!product.product_description);
+                console.log('   Has suffix?', product.hasSuffix || false);
+                
+                // ⭐ 1. Load About this item from JSONL short_description
+                if (product.short_description && document.getElementById('featureList')) {
                     const featureList = document.getElementById('featureList');
-                    const editIndicator = featureList.querySelector('.edit-indicator');
                     
-                    featureList.innerHTML = '';
-                    if (editIndicator) {
-                        featureList.appendChild(editIndicator.cloneNode(true));
+                    // Clear content but preserve edit indicator
+                    const existingUl = featureList.querySelector('ul');
+                    if (existingUl) {
+                        existingUl.remove();
                     }
                     
+                    // Create UL container
                     const ul = document.createElement('ul');
                     ul.className = 'feature-list';
                     
-                    const lines = product.featureList.split('\n').filter(line => line.trim());
+                    // Parse short_description by uppercase keywords
+                    let lines = [];
+                    const shortDesc = product.short_description;
+                    
+                    if (shortDesc.includes('\n')) {
+                        lines = shortDesc.split('\n').filter(line => line.trim());
+                    } else {
+                        // Split by uppercase patterns like "FAST AND EASY:", "450°F HI-FRY:"
+                        const pattern = /([A-Z0-9°][A-Z\s&°]+:)/g;
+                        const parts = shortDesc.split(pattern);
+                        for (let i = 1; i < parts.length; i += 2) {
+                            if (parts[i] && parts[i+1]) {
+                                lines.push(parts[i] + ' ' + parts[i+1].trim());
+                            }
+                        }
+                    }
+                    
                     lines.forEach(line => {
                         const li = document.createElement('li');
                         li.innerHTML = line.trim();
@@ -738,30 +790,67 @@
                     });
                     
                     featureList.appendChild(ul);
+                    console.log('   ✅ Loaded', lines.length, 'features');
                 }
                 
-                // Load product description if available
-                const descElement = document.getElementById('productDescription') || 
-                                document.querySelector('.description-text');
-                
-                if (product.productDescription && descElement) {
-                    const editIndicator = descElement.querySelector('.edit-indicator');
+                // ⭐ 2. Load Product Description from JSONL product_description
+                const descElement = document.getElementById('productDescription');
+                if (descElement) {
+                    // Clear content but preserve edit indicator
+                    const paragraphs = descElement.querySelectorAll('p, .suffix-content');
+                    paragraphs.forEach(p => p.remove());
                     
-                    descElement.innerHTML = '';
-                    if (editIndicator) {
-                        descElement.appendChild(editIndicator.cloneNode(true));
+                    // Check if product_description exists in JSONL
+                    if (product.product_description) {
+                        console.log('   ✅ Loading product_description from JSONL');
+                        
+                        const paragraphs = product.product_description.split('\n\n').filter(p => p.trim());
+                        paragraphs.forEach(para => {
+                            const p = document.createElement('p');
+                            p.style.marginBottom = '15px';
+                            p.innerHTML = para.trim().replace(/\n/g, '<br>');
+                            descElement.appendChild(p);
+                        });
+                    } else {
+                        console.log('   ⚠️ product_description is null in JSONL');
+                        
+                        // Show placeholder if no description
+                        const placeholder = document.createElement('p');
+                        placeholder.style.color = '#666';
+                        placeholder.style.fontStyle = 'italic';
+                        placeholder.textContent = 'No product description available.';
+                        descElement.appendChild(placeholder);
                     }
                     
-                    const paragraphs = product.productDescription.split('\n\n').filter(p => p.trim());
-                    paragraphs.forEach(para => {
-                        const p = document.createElement('p');
-                        p.style.marginBottom = '15px';
-                        p.innerHTML = para.trim().replace(/\n/g, '<br>');
-                        descElement.appendChild(p);
-                    });
+                    // ⭐ 3. Append suffix if exists
+                    if (product.hasSuffix && product.suffixText) {
+                        console.log('   ✅ Appending suffix');
+                        
+                        const suffixDiv = document.createElement('div');
+                        suffixDiv.className = 'suffix-content';
+                        suffixDiv.style.marginTop = '30px';
+                        suffixDiv.style.paddingTop = '20px';
+                        suffixDiv.style.borderTop = '2px solid #e7e7e7';
+                        
+                        const paragraphs = product.suffixText.split('\n\n').filter(p => p.trim());
+                        paragraphs.forEach(para => {
+                            const p = document.createElement('p');
+                            p.style.marginBottom = '15px';
+                            p.innerHTML = para.trim().replace(/\n/g, '<br>');
+                            suffixDiv.appendChild(p);
+                        });
+                        
+                        descElement.appendChild(suffixDiv);
+                    }
                 }
                 
-                console.log('Loaded from centralized storage for product:', productId);
+                console.log('✅ Loaded from JSONL successfully');
+            } else {
+                console.log('❌ Product not found in localStorage:', productId);
+                console.log('   Available products:', data.map(p => p.id).join(', '));
+                
+                // Show default content from HTML if no localStorage data
+                console.log('   📌 Using default HTML content');
             }
         }
     </script>
