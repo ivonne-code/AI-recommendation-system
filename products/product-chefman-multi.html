@@ -875,40 +875,10 @@
             console.log('   Has suffix?', product.hasSuffix || false);
 
             // =========================
-            // 1) About this item (features)
             // =========================
-            const featureListEl = document.getElementById('featureList');
-            if (featureListEl) {
-            const existingUl = featureListEl.querySelector('ul');
-            if (existingUl) existingUl.remove();
-
-            const ul = document.createElement('ul');
-            ul.className = 'feature-list';
-
-            // 🔑 关键就在这里
-            const rawFeature =
-                (product.featureList && product.featureList.trim()) ||
-                (product.short_description && product.short_description.trim()) ||
-                '';
-
-            const bullets = splitShortDescToBullets(rawFeature);
-
-            if (bullets.length > 0) {
-                bullets.forEach(b => {
-                const li = document.createElement('li');
-                li.innerHTML = escapeHTML(b).replace(/\n/g, '<br>');
-                ul.appendChild(li);
-                });
-            } else {
-                const li = document.createElement('li');
-                li.style.color = '#666';
-                li.style.fontStyle = 'italic';
-                li.textContent = 'No features available.';
-                ul.appendChild(li);
-            }
-
-            featureListEl.appendChild(ul);
-            }
+            // 1) Skip featureList - use HTML content only
+            // =========================
+            console.log('   ⏭️ Skipping featureList - using HTML content only');
 
         // =========================
         // 2) Product Description (ONLY product_description + edited + suffix)

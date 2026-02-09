@@ -788,46 +788,8 @@
                 console.log('   product_description:', !!product.product_description);
                 console.log('   Has suffix?', product.hasSuffix || false);
                 
-                // ⭐ 1. Load About this item from JSONL short_description
-                if (product.short_description && document.getElementById('featureList')) {
-                    const featureList = document.getElementById('featureList');
-                    
-                    // Clear content but preserve edit indicator
-                    const existingUl = featureList.querySelector('ul');
-                    if (existingUl) {
-                        existingUl.remove();
-                    }
-                    
-                    // Create UL container
-                    const ul = document.createElement('ul');
-                    ul.className = 'feature-list';
-                    
-                    // Parse short_description by uppercase keywords
-                    let lines = [];
-                    const shortDesc = product.short_description;
-                    
-                    if (shortDesc.includes('\n')) {
-                        lines = shortDesc.split('\n').filter(line => line.trim());
-                    } else {
-                        // Split by uppercase patterns like "FAST AND EASY:", "450°F HI-FRY:"
-                        const pattern = /([A-Z0-9°][A-Z\s&°]+:)/g;
-                        const parts = shortDesc.split(pattern);
-                        for (let i = 1; i < parts.length; i += 2) {
-                            if (parts[i] && parts[i+1]) {
-                                lines.push(parts[i] + ' ' + parts[i+1].trim());
-                            }
-                        }
-                    }
-                    
-                    lines.forEach(line => {
-                        const li = document.createElement('li');
-                        li.innerHTML = line.trim();
-                        ul.appendChild(li);
-                    });
-                    
-                    featureList.appendChild(ul);
-                    console.log('   ✅ Loaded', lines.length, 'features');
-                }
+                // ⭐ 1. Skip featureList - use HTML content only
+                console.log('   ⏭️ Skipping featureList - using HTML content only');
                 
                 // ⭐ 2. Load Product Description from JSONL product_description
                 const descElement = document.getElementById('productDescription');
@@ -881,14 +843,14 @@
                 }
                 
                 console.log('✅ Loaded from JSONL successfully');
-            } else {
-                console.log('❌ Product not found in localStorage:', productId);
-                console.log('   Available products:', data.map(p => p.id).join(', '));
-                
-                // Show default content from HTML if no localStorage data
-                console.log('   📌 Using default HTML content');
-            }
+        } else {
+            console.log('❌ Product not found in localStorage:', productId);
+            console.log('   Available products:', data.map(p => p.id).join(', '));
+            
+            // Show default content from HTML if no localStorage data
+            console.log('   📌 Using default HTML content');
         }
+    }
     </script>
 </body>
 </html>

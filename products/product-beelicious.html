@@ -791,20 +791,6 @@
                 // ⭐ 1. Skip featureList - use HTML content only
                 console.log('   ⏭️ Skipping featureList - using HTML content only');
                 
-            }
-
-                    
-            lines.forEach(line => {
-                const li = document.createElement('li');
-                    li.innerHTML = line.trim();
-                    ul.appendChild(li);
-                });
-                
-            featureList.appendChild(ul);
-                    console.log('   ✅ Loaded', lines.length, 'features');
-            }
-
-                
                 // ⭐ 2. Load Product Description from JSONL product_description
             const descElement = document.getElementById('productDescription');
             if (descElement) {
@@ -855,13 +841,15 @@
                     descElement.appendChild(suffixDiv);
                 }
             console.log('✅ Loaded from JSONL successfully');
-            } else {
-                console.log('❌ Product not found in localStorage:', productId);
-                console.log('   Available products:', data.map(p => p.id).join(', '));
-                
-                // Show default content from HTML if no localStorage data
-                console.log('   📌 Using default HTML content');
             }
+        } else {
+            console.log('❌ Product not found in localStorage:', productId);
+            console.log('   Available products:', data.map(p => p.id).join(', '));
+            
+            // Show default content from HTML if no localStorage data
+            console.log('   📌 Using default HTML content');
+        }
+    }
     </script>
 </body>
 </html>
