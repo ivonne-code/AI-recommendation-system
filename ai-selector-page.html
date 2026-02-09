@@ -1112,7 +1112,7 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
             
             <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #dee2e6; margin-bottom: 20px;">
                 <h4 style="margin: 0 0 10px 0; font-size: 16px; color: #343a40;">BibTeX</h4>
-                <pre style="background: #f1f3f5; padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 13px; margin: 0; border: 1px solid #dee2e6;"><code>@article{jin2026controlling,
+                <pre style="background: #f1f3f5; padding: 15px; border-radius: 6px; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 13px; margin: 0; border: 1px solid #dee2e6;"><code>@article{jin2026core,
   title={Controlling Output Rankings in Generative Engines for LLM-based Search},
   author={Haibo Jin, Ruoxi Chen, Peiyan Zhang, Yifeng Luo, Huimin Zeng, Man Luo, Haohan Wang},
   journal={arXiv preprint arXiv:2602.03608},
@@ -1192,13 +1192,13 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
             return {
                 openai: {
                     url: 'https://api.openai.com/v1/chat/completions',
-                    key: customOpenAI || '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',
+                    key: customOpenAI || '',
                     model: 'gpt-4o',
                     isCustom: !!customOpenAI
                 },
                 deepseek: {
-                    url: 'https://api.probex.top/v1/chat/completions',
-                    key: customDeepSeek || 'sk-NvCpIJxe34WsolBPpvZFdehsVtwMuKGiqrjS0RdupBUP7gGI',
+                    url: 'http://127.0.0.1:5000/deepseek',
+                    key: customDeepSeek || '',
                     model: 'deepseek-chat',
                     isCustom: !!customDeepSeek
                 }
@@ -1237,8 +1237,8 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
                 document.getElementById('openaiKeyInput').value = '';
                 document.getElementById('openaiKeyInput').placeholder = '••••••••••••••••' + customOpenAI.slice(-4);
             } else {
-                openaiStatus.textContent = 'Using default API key (may have rate limits)';
-                openaiStatus.className = 'api-key-status using-default';
+                openaiStatus.textContent = 'No key set. Please add your API key.';
+                openaiStatus.className = 'api-key-status NOT-SET';
                 openaiStatus.style.display = 'block';
                 document.getElementById('openaiKeyInput').value = '';
                 document.getElementById('openaiKeyInput').placeholder = 'sk-proj-...';
@@ -1251,8 +1251,8 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
                 document.getElementById('deepseekKeyInput').value = '';
                 document.getElementById('deepseekKeyInput').placeholder = '••••••••••••••••' + customDeepSeek.slice(-4);
             } else {
-                deepseekStatus.textContent = 'Using default API key (may have rate limits)';
-                deepseekStatus.className = 'api-key-status using-default';
+                deepseekStatus.textContent = 'No key set. Please add your API key.';
+                deepseekStatus.className = 'api-key-status NOT-SET';
                 deepseekStatus.style.display = 'block';
                 document.getElementById('deepseekKeyInput').value = '';
                 document.getElementById('deepseekKeyInput').placeholder = 'sk-...';
@@ -1322,20 +1322,6 @@ After months of testing, the **Ninja Crispi 4-in-1 Portable Glass Air Fryer** is
                 loadAPIKeyStatus();
             }
         }
-
-        // 保持向后兼容的 API_CONFIG（已弃用，使用 getAPIConfig() 代替）
-        const API_CONFIG = {
-            openai: {
-                url: 'https://api.openai.com/v1/chat/completions',
-                key: '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',
-                model: 'gpt-4o'
-            },
-            deepseek: {
-                url: 'https://api.probex.top/v1/chat/completions',
-                key: 'sk-NvCpIJxe34WsolBPpvZFdehsVtwMuKGiqrjS0RdupBUP7gGI',
-                model: 'deepseek-chat'
-            }
-        };
         let currentEditingTooltip = null;
         let tooltipTimeout = null;
         let currentTooltip = null;
@@ -1788,6 +1774,9 @@ Return ONLY the JSON array, no additional text.`;
         // OpenAI API 调用
         async function callOpenAIAPI(products) {
             const config = getAPIConfig().openai;
+            if (!config.key) {
+                throw new Error('No OpenAI API key. Click "API Keys" and save your key first.');
+            }
             const prompt = buildPrompt(products);
             
             try {
@@ -1837,6 +1826,9 @@ Return ONLY the JSON array, no additional text.`;
         // DeepSeek API 调用
         async function callDeepSeekAPI(products) {
             const config = getAPIConfig().deepseek;
+            if (!config.key) {
+                throw new Error('No DeepSeek API key. Click "API Keys" and save your key first.');
+            }
             const prompt = buildPrompt(products);
             
             try {
