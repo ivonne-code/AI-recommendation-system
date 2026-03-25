@@ -1496,7 +1496,7 @@ After thorough testing, the **LEVOIT Top Fill Humidifiers for Bedroom** is the b
         });
 
         function loadSavedAIRankings() {
-            const saved = localStorage.getItem('ai_rankings');
+            const saved = localStorage.getItem('ai_rankings_humidifier');
             if (saved) {
                 try {
                     const data = JSON.parse(saved);
@@ -1724,7 +1724,7 @@ After thorough testing, the **LEVOIT Top Fill Humidifiers for Bedroom** is the b
             setTimeout(() => {
                 rankingItems.forEach(item => item.remove());
                 // 清除保存的排名
-                localStorage.removeItem('ai_rankings');
+                localStorage.removeItem('ai_rankings_humidifier');
                 // Show message
                 const message = document.createElement('div');
                 message.style.textAlign = 'center';
@@ -2022,7 +2022,7 @@ Return ONLY the JSON array, no additional text.`;
             saveAIRankings(rankings);
         }
         function saveAIRankings(rankings) {
-            localStorage.setItem('ai_rankings', JSON.stringify({
+            localStorage.setItem('ai_rankings_humidifier', JSON.stringify({
                 rankings: rankings,
                 timestamp: new Date().toISOString()
             }));
@@ -2032,27 +2032,27 @@ Return ONLY the JSON array, no additional text.`;
             return [
                 {
                     rank: 1,
-                    category: "Best Overall / Most Versatile",
+                    category: "Best Overall / Most Trusted",
                     product_name: products[0].name,
-                    brief_description: "A premium, versatile option based on the current product descriptions.",
-                    pros: "High ratings and comprehensive features. Excellent value for money. User-friendly design.",
-                    cons: "May require more counter space. Higher price point."
+                    brief_description: "A premium, reliable humidifier based on the current product descriptions.",
+                    pros: "High ratings and trusted brand. Effective humidification technology. Easy to clean and use.",
+                    cons: "May require periodic filter replacement. Higher price point."
                 },
                 {
                     rank: 2,
-                    category: "Best Value",
-                    product_name: products[2].name,
-                    brief_description: "Great balance of features and affordability.",
-                    pros: "Competitive pricing. Good capacity for families. Multiple cooking functions.",
-                    cons: "Learning curve for advanced features."
+                    category: "Best Value for Large Rooms",
+                    product_name: products[1].name,
+                    brief_description: "Great balance of capacity and affordability for large spaces.",
+                    pros: "Large tank capacity. Competitive pricing. Smart humidity control.",
+                    cons: "Larger footprint than compact models."
                 },
                 {
                     rank: 3,
-                    category: "Best for Small Households",
-                    product_name: products[1].name,
-                    brief_description: "Compact and efficient for everyday use.",
-                    pros: "Space-saving design. Simple operation. Easy to clean.",
-                    cons: "Smaller capacity. Fewer preset options."
+                    category: "Best Compact & Quiet",
+                    product_name: products[4].name,
+                    brief_description: "Compact and efficient for everyday bedroom and nursery use.",
+                    pros: "Ultra-quiet operation. Easy top-fill design. BPA-free and filterless.",
+                    cons: "Smaller tank for very large rooms."
                 }
             ];
         }

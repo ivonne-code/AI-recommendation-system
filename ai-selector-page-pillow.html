@@ -720,7 +720,7 @@
             <button class="search-btn">Search</button>
         </div>
     </div>
-    
+
     <!-- AI Selector Section -->
     <div class="ai-selector-section">
         <div class="ai-selector-header">
@@ -1475,7 +1475,7 @@ After thorough testing, the **DreamyBlue Signature Pillow** is hands-down the be
         });
 
         function loadSavedAIRankings() {
-            const saved = localStorage.getItem('ai_rankings');
+            const saved = localStorage.getItem('ai_rankings_pillow');
             if (saved) {
                 try {
                     const data = JSON.parse(saved);
@@ -1703,7 +1703,7 @@ After thorough testing, the **DreamyBlue Signature Pillow** is hands-down the be
             setTimeout(() => {
                 rankingItems.forEach(item => item.remove());
                 // 清除保存的排名
-                localStorage.removeItem('ai_rankings');
+                localStorage.removeItem('ai_rankings_pillow');
                 // Show message
                 const message = document.createElement('div');
                 message.style.textAlign = 'center';
@@ -2001,7 +2001,7 @@ Return ONLY the JSON array, no additional text.`;
             saveAIRankings(rankings);
         }
         function saveAIRankings(rankings) {
-            localStorage.setItem('ai_rankings', JSON.stringify({
+            localStorage.setItem('ai_rankings_pillow', JSON.stringify({
                 rankings: rankings,
                 timestamp: new Date().toISOString()
             }));
@@ -2010,28 +2010,25 @@ Return ONLY the JSON array, no additional text.`;
         function getFallbackRankings(products) {
             return [
                 {
-                    rank: 1,
-                    category: "Best Overall / Most Versatile",
-                    product_name: products[0].name,
-                    brief_description: "A premium, versatile option based on the current product descriptions.",
-                    pros: "High ratings and comprehensive features. Excellent value for money. User-friendly design.",
-                    cons: "May require more counter space. Higher price point."
+                    rank:1, category:"Best Overall", 
+                    product_name:products[3].name, 
+                    brief_description:"A premium adjustable pillow loved by 18,000+ customers.", 
+                    pros:"Adjustable loft. Unique foam+down blend. FREE extra fill bag. Bamboo cover.", 
+                    cons:"Higher price point. Fill adjustment required."
                 },
                 {
-                    rank: 2,
-                    category: "Best Value",
-                    product_name: products[2].name,
-                    brief_description: "Great balance of features and affordability.",
-                    pros: "Competitive pricing. Good capacity for families. Multiple cooking functions.",
-                    cons: "Learning curve for advanced features."
+                    rank:2, category:"Best for Neck Pain", 
+                    product_name:products[5].name, 
+                    brief_description:"3-layer cervical design for targeted neck and shoulder relief.", 
+                    pros:"3-layer customization. Ventilated foam. Bamboo cover. 10,000+ reviews.", 
+                    cons:"Contour shape needs adjustment period." 
                 },
                 {
-                    rank: 3,
-                    category: "Best for Small Households",
-                    product_name: products[1].name,
-                    brief_description: "Compact and efficient for everyday use.",
-                    pros: "Space-saving design. Simple operation. Easy to clean.",
-                    cons: "Smaller capacity. Fewer preset options."
+                    rank:3, category:"Best Budget Value", 
+                    product_name:products[8].name, 
+                    brief_description:"Two pillows for under $30 with adjustable CertiPUR-US foam.", 
+                    pros:"2-pack value. Adjustable firmness. Washable cover. All sleeper types.", 
+                    cons:"No advanced cooling technology." 
                 }
             ];
         }
