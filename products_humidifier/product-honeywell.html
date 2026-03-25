@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honeywell Cool Moisture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #0F1111;
+        }
+
+        .header {
+            background-color: #131921;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        .header-content {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .search-bar {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .breadcrumb {
+            padding: 15px 20px;
+            font-size: 12px;
+            color: #565959;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb a {
+            color: #007185;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: #C7511F;
+            text-decoration: underline;
+        }
+
+        .product-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        .image-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background: #f7f7f7;
+            margin-bottom: 15px;
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .thumbnail:hover {
+            border-color: #C7511F;
+        }
+
+        .info-section {
+            padding: 0 20px;
+        }
+
+        .product-title {
+            font-size: 24px;
+            line-height: 32px;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .stars {
+            color: #FFA41C;
+        }
+
+        .rating-count {
+            color: #007185;
+        }
+
+        .price-section {
+            margin: 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid #e7e7e7;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .price {
+            font-size: 28px;
+            color: #B12704;
+            font-weight: 400;
+        }
+
+        .product-details {
+            margin: 20px 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .feature-list li:before {
+            content: "• ";
+            color: #007185;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .buy-box {
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f7f7f7;
+        }
+
+        .buy-price {
+            font-size: 28px;
+            color: #B12704;
+            margin-bottom: 10px;
+        }
+
+        .delivery-info {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .stock-info {
+            color: #007600;
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        .quantity-selector {
+            margin: 15px 0;
+        }
+
+        .quantity-selector select {
+            padding: 8px;
+            border: 1px solid #D5D9D9;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .add-to-cart-btn {
+            background: #3498DB;
+            border: 1px solid #2980B9;
+            color: white;
+            width: 100%;
+            padding: 15px 20px; 
+            font-size: 16px;
+            font-weight: 600; 
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+
+        .add-to-cart-btn:hover {
+            background: #2980B9;
+        }
+
+        .buy-now-btn {
+            background: #E67E22;
+            border: 1px solid #D35400;
+            color: white;
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .buy-now-btn:hover {
+            background: #D35400;
+        }
+
+        .description-section {
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .description-text {
+            line-height: 1.8;
+            color: #0F1111;
+        }
+        /* Edit functionality styles */
+        /* Edit functionality styles */
+        .editable-section {
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .editable-section:hover {
+            background-color: #f0f0f0;
+        }
+
+        .edit-indicator {
+            display: none;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #FFD814;
+            color: #0F1111;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .editable-section:hover .edit-indicator {
+            display: block;
+        }
+
+        .edit-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+        }
+
+        .edit-overlay.active {
+            display: block;
+        }
+
+        .edit-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .edit-modal.active {
+            display: block;
+        }
+
+        .edit-modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .edit-modal-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #FFD814;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+        }
+
+        .edit-modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .edit-modal-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .edit-modal-save {
+            background-color: #FFD814;
+            color: #0F1111;
+        }
+
+        .edit-modal-save:hover {
+            background-color: #F7CA00;
+        }
+
+        .edit-modal-cancel {
+            background-color: white;
+            color: #0F1111;
+            border: 1px solid #D5D9D9;
+        }
+
+        .edit-modal-cancel:hover {
+            background-color: #F7FAFA;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <input type="text" class="search-bar" placeholder="Search products...">
+        </div>
+    </div>
+
+    <div class="breadcrumb">
+        <a href="#">Home</a> › 
+        <a href="#">Kitchen & Dining</a> › 
+        <a href="#">Small Appliances</a> › 
+        <a href="#">Humidifiers</a> › 
+        <span>Honeywell Cool Moisture</span>
+    </div>
+
+    <div class="product-container">
+        <div class="image-section">
+            <img src="https://m.media-amazon.com/images/I/61ULZsRH0tL._AC_SX679_.jpg" alt="Honeywell Cool Moisture" class="main-image" id="mainImage">
+            <div class="thumbnail-container">
+                <img src="https://m.media-amazon.com/images/I/61ULZsRH0tL._AC_SX466_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+                <img src="https://m.media-amazon.com/images/I/61ULZsRH0tL._AC_SX425_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+                <img src="https://m.media-amazon.com/images/I/61ULZsRH0tL._AC_SY355_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+                <img src="https://m.media-amazon.com/images/I/61ULZsRH0tL._AC_SX569_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+                <img src="https://m.media-amazon.com/images/I/61ULZsRH0tL._AC_SY450_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+                <img src="https://m.media-amazon.com/images/I/61ULZsRH0tL._AC_SX679_.jpg" class="thumbnail" onclick="changeImage(this.src)">
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h1 class="product-title">Honeywell Cool Moisture Humidifier, Medium Room, 1 Gallon Tank, White – Invisible Moisture Humidifier for Baby, Kids, Adult Bedrooms – Quiet and Easy to Clean with UV Technology for Everyday Comfort</h1>
+
+            <div class="rating-section">
+                <span class="stars">★★★★☆</span>
+                <span class="rating-count">4.3 out of 5 stars</span>
+                <a href="#" class="rating-count">10,590 ratings</a>
+            </div>
+
+            <div class="price-section">
+                <span class="price">$79.99</span>
+            </div>
+
+            <div class="product-details">
+                <h2 class="section-title">About this item</h2>
+                <div class="editable-section" id="featureList">
+                    <span class="edit-indicator">✏️ Click to Edit</span>
+                    <ul class="feature-list">
+                    <li><strong>INVISIBLE MOISTURE</strong> – Honeywell Cool Moisture Humidifier effectively brings invisible moisture to your home. It utilizes UV technology and a wicking filter to help treat the water and capture minerals to keep them out of the air for a cleaner mist.</li>
+                    <li><strong>EVERYDAY COMFORT</strong> – This humidifier for home features evaporative technology that increases and holds the targeted humidity level to optimize moisture in the room. It’s ideal for everyday comfort and year-round relief from dry throat and dry, itchy skin.</li>
+                    <li><strong>EASY TO USE</strong> – Featuring a large 1.1 gallon, easy-fill, self-standing tank, this cool moisture humidifier provides up to 24 hours of run time. Plus, it’s easy to clean – all parts that touch water can be cleaned in the dishwasher.</li>
+                    <li><strong>HUMIDIFIER FOR BEDROOM</strong> – As the ideal humidifier for baby, this device has a soft, fan-like sound to add restful noise to any room. Great for an adult or child’s bedroom, the large tank can run overnight, providing consistent soothing moisture.</li>
+                    <li><strong>COMPATIBLE DOES NOT MEAN COMPARABLE</strong> – For best performance, use only a genuine Honeywell Replacement Wicking Filter A. Compatible humidifier filter replacements are not guaranteed to offer the same performance or efficiency.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="buy-box">
+            <div class="buy-price">$79.99</div>
+            <div class="delivery-info">
+                <strong>FREE Returns</strong><br>
+                FREE delivery <strong>Sunday, October 26</strong><br>
+                Or fastest delivery <strong>Friday, October 24</strong>
+            </div>
+            <div class="stock-info">In Stock</div>
+            <div class="quantity-selector">
+                <label for="quantity">Quantity:</label>
+                <select id="quantity">
+                    <option>1</option><option>2</option><option>3</option>
+                    <option>4</option><option>5</option>
+                </select>
+            </div>
+            <button class="add-to-cart-btn">Add to Cart</button>
+            <button class="buy-now-btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="description-section">
+        <h2 class="section-title">Product Description</h2>
+        <div class="description-text editable-section" id="productDescription">
+            <span class="edit-indicator">✏️ Click to Edit</span>
+            <!-- Content will be loaded from JSONL via localStorage -->
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="edit-overlay" id="editOverlay"></div>
+    <div class="edit-modal" id="editModal">
+        <div class="edit-modal-header">Edit Description</div>
+        <textarea class="edit-modal-textarea" id="editTextarea"></textarea>
+        <div class="edit-modal-buttons">
+            <button class="edit-modal-btn edit-modal-cancel" onclick="cancelEdit()">Cancel</button>
+            <button class="edit-modal-btn edit-modal-save" onclick="saveEdit()">Save</button>
+        </div>
+    </div>
+
+    <script>
+        let currentEditingElement = null;
+        let originalContent = '';
+
+        function changeImage(src) {
+            document.getElementById('mainImage').src = src.replace(/_(AC_S[XY]\d+)\.jpg/, '_AC_SX679.jpg');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const editableSections = document.querySelectorAll('.editable-section');
+            editableSections.forEach(section => {
+                section.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'A') return;
+                    openEditModal(this);
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('editModal').classList.contains('active')) {
+                    cancelEdit();
+                }
+            });
+
+            loadFromLocalStorage();
+        });
+
+        function openEditModal(element) {
+            currentEditingElement = element;
+            const editIndicator = element.querySelector('.edit-indicator');
+            let content = element.innerHTML;
+            if (editIndicator) content = content.replace(editIndicator.outerHTML, '');
+            originalContent = content;
+
+            let textForEditing = '';
+            if (element.id === 'featureList') {
+                const items = element.querySelectorAll('li');
+                textForEditing = Array.from(items).map(li => li.innerHTML.trim()).join('\n---\n');
+            } else {
+                const paragraphs = element.querySelectorAll('p');
+                if (paragraphs.length > 0) {
+                    textForEditing = Array.from(paragraphs).map(p => p.innerHTML.trim()).join('\n\n');
+                } else {
+                    textForEditing = content;
+                }
+            }
+
+            document.getElementById('editTextarea').value = textForEditing;
+            document.getElementById('editOverlay').classList.add('active');
+            document.getElementById('editModal').classList.add('active');
+            setTimeout(() => document.getElementById('editTextarea').focus(), 100);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function saveEdit() {
+            const newText = document.getElementById('editTextarea').value.trim();
+            if (currentEditingElement) {
+                const editIndicator = currentEditingElement.querySelector('.edit-indicator');
+                currentEditingElement.innerHTML = '';
+                if (editIndicator) currentEditingElement.appendChild(editIndicator.cloneNode(true));
+
+                if (currentEditingElement.id === 'featureList') {
+                    const ul = document.createElement('ul');
+                    ul.className = 'feature-list';
+                    const lines = newText.split(/\n---\n|\n/).filter(l => l.trim());
+                    lines.forEach(line => {
+                        const li = document.createElement('li');
+                        li.innerHTML = line.trim();
+                        ul.appendChild(li);
+                    });
+                    currentEditingElement.appendChild(ul);
+                } else {
+                    const paragraphs = newText.split('\n\n').filter(p => p.trim());
+                    paragraphs.forEach(para => {
+                        const p = document.createElement('p');
+                        p.style.marginBottom = '15px';
+                        p.innerHTML = para.trim().replace(/\n/g, '<br>');
+                        currentEditingElement.appendChild(p);
+                    });
+                }
+
+                const originalBg = currentEditingElement.style.backgroundColor;
+                currentEditingElement.style.backgroundColor = '#d4edda';
+                setTimeout(() => { currentEditingElement.style.backgroundColor = originalBg; }, 800);
+                saveToLocalStorage();
+            }
+            closeEditModal();
+        }
+
+        function cancelEdit() { closeEditModal(); }
+
+        function closeEditModal() {
+            document.getElementById('editOverlay').classList.remove('active');
+            document.getElementById('editModal').classList.remove('active');
+            document.body.style.overflow = '';
+            currentEditingElement = null;
+            originalContent = '';
+        }
+
+        function getCurrentProductId() {
+            const url = window.location.pathname;
+            const filename = url.split('/').pop().replace('.html', '');
+            const centralKey = 'humidifier_products_data';
+            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            const productMap = {"product-honeywell": 0, "product-breezome": 1, "product-dreo": 2, "product-raydrop-3l": 3, "product-levoit": 4, "product-filterless-2l": 5, "product-raydrop-2l": 6, "product-clarston": 7, "product-vicks": 8, "product-megawise": 9};
+            if (productMap[filename] !== undefined && data[productMap[filename]]) {
+                return data[productMap[filename]].id;
+            }
+            return filename;
+        }
+
+        function saveToLocalStorage() {
+            const productId = getCurrentProductId();
+            const centralKey = 'humidifier_products_data';
+            const featureList = document.getElementById('featureList');
+            const productDescription = document.getElementById('productDescription');
+
+            let featureText = '';
+            if (featureList) {
+                const ul = featureList.querySelector('ul');
+                if (ul) {
+                    featureText = Array.from(ul.querySelectorAll('li')).map(li => li.textContent.trim()).join('\n');
+                }
+            }
+
+            let descText = '';
+            if (productDescription) {
+                const editIndicator = productDescription.querySelector('.edit-indicator');
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = productDescription.innerHTML;
+                if (editIndicator) {
+                    const ind = tempDiv.querySelector('.edit-indicator');
+                    if (ind) ind.remove();
+                }
+                descText = tempDiv.textContent.trim();
+            }
+
+            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            let product = data.find(p => p.id === productId);
+            if (!product) {
+                product = { id: productId };
+                data.push(product);
+            }
+
+            product.description = featureText + '\n\n' + descText;
+            product.featureList = featureText;
+            product.productDescription = descText;
+            product.lastModified = new Date().toISOString();
+
+            const feature = (product.featureList && String(product.featureList).trim()) || '';
+            const desc = (product.productDescription && String(product.productDescription).trim()) ||
+                         (product.product_description && String(product.product_description).trim()) || '';
+            let base = [feature, desc].filter(Boolean).join('\n\n').trim();
+            if (product.hasSuffix === true && product.suffixText && String(product.suffixText).trim()) {
+                base = base ? base + '\n\n' + String(product.suffixText).trim() : String(product.suffixText).trim();
+            }
+            product.ranking_text = base;
+
+            localStorage.setItem(centralKey, JSON.stringify(data));
+            console.log('Saved to humidifier storage, product:', productId);
+        }
+
+        function loadFromLocalStorage() {
+            const productId = getCurrentProductId();
+            const centralKey = 'humidifier_products_data';
+            const data = JSON.parse(localStorage.getItem(centralKey) || '[]');
+            const product = data.find(p => p.id === productId);
+
+            if (product) {
+                console.log('Loading product from localStorage:', productId);
+                const descElement = document.getElementById('productDescription');
+                if (descElement) {
+                    const paragraphs = descElement.querySelectorAll('p, .suffix-content');
+                    paragraphs.forEach(p => p.remove());
+
+                    if (product.product_description) {
+                        product.product_description.split('\n\n').filter(p => p.trim()).forEach(para => {
+                            const p = document.createElement('p');
+                            p.style.marginBottom = '15px';
+                            p.innerHTML = para.trim().replace(/\n/g, '<br>');
+                            descElement.appendChild(p);
+                        });
+                    } else {
+                        const placeholder = document.createElement('p');
+                        placeholder.style.color = '#666';
+                        placeholder.style.fontStyle = 'italic';
+                        placeholder.textContent = 'No product description available.';
+                        descElement.appendChild(placeholder);
+                    }
+
+                    if (product.hasSuffix && product.suffixText) {
+                        const suffixDiv = document.createElement('div');
+                        suffixDiv.className = 'suffix-content';
+                        suffixDiv.style.marginTop = '30px';
+                        suffixDiv.style.paddingTop = '20px';
+                        suffixDiv.style.borderTop = '2px solid #e7e7e7';
+                        product.suffixText.split('\n\n').filter(p => p.trim()).forEach(para => {
+                            const p = document.createElement('p');
+                            p.style.marginBottom = '15px';
+                            p.innerHTML = para.trim().replace(/\n/g, '<br>');
+                            suffixDiv.appendChild(p);
+                        });
+                        descElement.appendChild(suffixDiv);
+                    }
+                }
+            } else {
+                console.log('Product not found in localStorage:', productId);
+            }
+        }
+    </script>
+</body>
+</html>
